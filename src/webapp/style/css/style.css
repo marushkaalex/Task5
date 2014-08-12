@@ -1,0 +1,54 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+h1, h2.center {
+    text-align: center;
+}
+
+a{
+    text-decoration: none;
+}
+/* unvisited link */
+a:link {
+    color: #B5CDE1;
+}
+
+/* visited link */
+a:visited {
+    color: #91A4B4;
+}
+
+/* mouse over link */
+a:hover {
+    color: #91A4B4;
+}
+
+/* selected link */
+a:active {
+    color: #748390;
+}
+
+#loginform {
+    border-radius: 15px;
+    background-color: lightsteelblue;
+    padding: 20px;
+    width: 200px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center
+}
+
+form #submit_button {
+    font-size: 1em;
+    padding: 10px 20px;
+}
