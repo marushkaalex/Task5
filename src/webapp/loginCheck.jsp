@@ -15,12 +15,11 @@
     String username = request.getParameter("username");
     String password = request.getParameter("password");
 
-    if ((username.equals("username")) && password.equals("password")) {
+    if ((username.equals("user")) && password.equals("password")) {
         session.setAttribute("username", username);
-        response.sendRedirect("Home.jsp");
-    }
-    else {
-        response.sendRedirect("Error.jsp");
+        response.sendRedirect("home.jsp");
+    } else {
+        response.sendRedirect("error.jsp");
     }
 %>
 </body>
