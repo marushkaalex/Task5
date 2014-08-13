@@ -13,7 +13,8 @@
 </head>
 <body>
 <div style="font-size: 10em; text-align: center">
-Please <a style="text-underline-position: 0" href="loginForm.jsp">log in</a>
+    Please <a href="loginForm.jsp">log in</a> <br>
+    or <a href="registerForm.jsp">register.</a>
 </div>
 </body>
 </html>

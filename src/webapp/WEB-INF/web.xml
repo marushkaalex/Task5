@@ -4,15 +4,21 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <welcome-file-list>
-        <welcome-file>loginForm.jsp</welcome-file>
-    </welcome-file-list>
     <servlet>
         <servlet-name>Controller</servlet-name>
         <servlet-class>com.epam.am.servlet.Controller</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
-        <url-pattern>/controller</url-pattern>
+        <url-pattern>/con/reg</url-pattern>
+        <url-pattern>/con/login</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.epam.am.filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

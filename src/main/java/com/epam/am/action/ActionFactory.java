@@ -6,9 +6,13 @@ import java.util.Map;
 public class ActionFactory {
     public static final String LOGIN_CHECK = "login_check";
 
+    private final static Map<String, Action> actions = new HashMap<String, Action>();
+
     static {
-        actions.put(LOGIN_CHECK, new LoginCheckAction());
+        ActionFactory.actions.put(LOGIN_CHECK, new LoginCheckAction());
     }
 
-    private final static Map<String, Action> actions = new HashMap<String, Action>();
+    public static Action getAction(String action) {
+        return actions.get(action);
+    }
 }

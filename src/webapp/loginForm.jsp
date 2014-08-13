@@ -25,7 +25,7 @@
     <div id="triangle"></div>
     <h1></h1>
 
-    <form action="loginCheck.jsp" method="post">
+    <form action="${pageContext.request.contextPath}/con/login" method="post">
         <input type="text" placeholder="Username" name="username"/>
         <input type="password" placeholder="Password" name="password"/>
         <input type="submit" value="Submit"/>
