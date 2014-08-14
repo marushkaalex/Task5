@@ -25,16 +25,13 @@
     <div id="triangle"></div>
     <h1></h1>
 
-    <form action="${pageContext.request.contextPath}/con/login" method="post">
-        <input type="text" placeholder="Username" name="username"/>
+    <form action="${pageContext.request.contextPath}" method="post">
+    <input type="text" placeholder="Username" name="username"/>
         <input type="password" placeholder="Password" name="password"/>
         <input type="submit" value="Submit"/>
     </form>
 </div>
 
-<script src="http://codepen.io/assets/libs/fullpage/jquery.js"></script>
-
-<script src="style/js/index.js"></script>
 </body>
 
 </html>

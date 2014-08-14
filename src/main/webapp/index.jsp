@@ -13,7 +13,7 @@
 </head>
 <body>
 <div style="font-size: 10em; text-align: center">
-    Please <a href="loginForm.jsp">log in</a> <br>
+    Please <a href="${pageContext.request.contextPath}/do/login">log in</a> <br>
     or <a href="registerForm.jsp">register.</a>
 </div>
 </body>
