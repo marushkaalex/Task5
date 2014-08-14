@@ -7,11 +7,11 @@ public class LoginCheckAction implements Action {
     private final static String PASSWORD = "password";
 
     @Override
-    public String execute(HttpServletRequest req) {
+    public ActionResult execute(HttpServletRequest req) {
         String username = req.getParameter(USERNAME);
         String password = req.getParameter(PASSWORD);
         req.getSession().setAttribute(USERNAME, username);
-        return "/home.jsp";
+        return new ActionResult("/home.jsp", true);
     }
 
     private boolean isFound(String username, String password) {

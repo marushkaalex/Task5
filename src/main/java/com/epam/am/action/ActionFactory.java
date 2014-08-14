@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionFactory {
-    public static final String LOGIN_CHECK = "login_check";
-
     private final static Map<String, Action> actions = new HashMap<String, Action>();
 
     static {
-        ActionFactory.actions.put(LOGIN_CHECK, new LoginCheckAction());
+        ActionFactory.actions.put("GET/login", new ShowLoginPageAction());
+        ActionFactory.actions.put("POST/login", new ShowLoginPageAction());
+        ActionFactory.actions.put("GETnull", new ShowPageAction("/index.jsp"));
     }
 
     public static Action getAction(String action) {
