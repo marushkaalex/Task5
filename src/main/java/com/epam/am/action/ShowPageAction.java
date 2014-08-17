@@ -4,14 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ShowPageAction implements Action {
 
-    String view;
+    private ActionResult actionResult;
 
     public ShowPageAction(String str) {
-        view = str;
+        actionResult = new ActionResult(str);
     }
 
     @Override
     public ActionResult execute(HttpServletRequest req) {
-        return new ActionResult(view);
+        return actionResult;
     }
 }

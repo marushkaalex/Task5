@@ -2,8 +2,12 @@ package com.epam.am.filter;
 
 import javax.servlet.*;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class EncodingFilter implements Filter {
+
+    private static java.util.logging.Logger log = Logger.getLogger("");
+
     public void destroy() {
     }
 
@@ -15,5 +19,4 @@ public class EncodingFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
 
     }
-
 }

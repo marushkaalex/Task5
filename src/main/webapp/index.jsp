@@ -13,8 +13,11 @@
 </head>
 <body>
 <div style="font-size: 10em; text-align: center">
-    Please <a href="${pageContext.request.contextPath}/login">log in</a> <br>
-    or <a href="${pageContext.request.contextPath}/register">register.</a>
+    <%
+        //        response.sendRedirect(request.getContextPath() + "/do?action=login");
+    %>
+    Please <a href="${pageContext.request.contextPath}/do/login">log in</a> <br>
+    or <a href="${pageContext.request.contextPath}/do/register">register.</a>
 </div>
 </body>
 </html>
