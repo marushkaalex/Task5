@@ -9,9 +9,12 @@ public class ActionFactory {
     static {
         ActionFactory.actions.put("GET/login", new ShowLoginPageAction());
         ActionFactory.actions.put("POST/login", new ShowLoginPageAction());
-        ActionFactory.actions.put("GETnull", new ShowPageAction("/index.jsp"));
         ActionFactory.actions.put("POST/logincheck", new LoginCheckAction());
-        ActionFactory.actions.put("GET/home", new ShowPageAction("/home"));
+        ActionFactory.actions.put("GET/home", new ShowPageAction("home"));
+        ActionFactory.actions.put("GET/index", new ShowPageAction("index"));
+        ActionFactory.actions.put("GET/", new ShowPageAction("index"));
+        ActionFactory.actions.put("GET/logout", new LogoutAction());
+        ActionFactory.actions.put("GET/register", new ShowPageAction("register"));
 
     }
 

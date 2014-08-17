@@ -18,20 +18,14 @@ public class UrlFilter implements Filter {
 
     private void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws ServletException, IOException {
         String pathInfo = req.getRequestURI().substring(req.getContextPath().length());
-//        log.log(Level.INFO, req.getRequestURL().toString());
-//        if ("/".equals(pathInfo) || pathInfo.startsWith("/static") || pathInfo.endsWith(".jsp")) {
-//            chain.doFilter(req, resp);
-//            return;
-//        }
-//
-//        req.getRequestDispatcher("/do" + pathInfo).forward(req, resp);
+        System.out.println("---");
         System.out.println("UrlFilter : pathInfo: " + pathInfo);
-//        if (pathInfo.startsWith("/static")) {
-//            chain.doFilter(req, resp);
-//            return;
-//        }
-//        req.getRequestDispatcher("/do" + pathInfo);
-        chain.doFilter(req, resp);
+        if (pathInfo.startsWith("/static")) {
+            chain.doFilter(req, resp);
+            return;
+        }
+        req.getRequestDispatcher("/do" + pathInfo).forward(req, resp);
+//        chain.doFilter(req, resp);
     }
 
 

@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 //TODO servlet
 //TODO database
 //TODO actions
-//TODO properties
+//TODO properties X
 //TODO logs X
 //TODO custom exception type
 //TODO java-version
-//TODO filter for charset
+//TODO filter for charset X
 //TODO DAO
 //TODO sql scripts
+//TODO registration
 
-//DONE
 public class Runner {
     private static Logger log = LoggerFactory.getLogger(Runner.class);
 

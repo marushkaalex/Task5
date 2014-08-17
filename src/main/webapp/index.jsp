@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<link rel="stylesheet" href="static/style/css/style.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
 <head>
     <title>Hello World</title>
 </head>
@@ -16,8 +16,8 @@
     <%
         //        response.sendRedirect(request.getContextPath() + "/do?action=login");
     %>
-    Please <a href="${pageContext.request.contextPath}/do/login">log in</a> <br>
-    or <a href="${pageContext.request.contextPath}/do/register">register.</a>
+    Please <a href="${pageContext.request.contextPath}/login">log in</a> <br>
+    or <a href="${pageContext.request.contextPath}/register">register.</a>
 </div>
 </body>
 </html>

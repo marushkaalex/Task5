@@ -30,7 +30,7 @@ public class Controller extends javax.servlet.http.HttpServlet {
         ActionResult result = action.execute(req);
 
         if (result.isRedirection()) {
-            resp.sendRedirect(req.getContextPath() + "/do/" + result.getView());
+            resp.sendRedirect(req.getContextPath() + "/" + result.getView());
             return;
         }
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/" + result.getView() + ".jsp");

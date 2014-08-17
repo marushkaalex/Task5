@@ -19,7 +19,7 @@
             out.println("Hello " + a);
         %>
     </h2>
-    <a href="logout.jsp">Logout</a>
+    <a href="logout">Logout</a>
 </div>
 
 </body>
