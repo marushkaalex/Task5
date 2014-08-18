@@ -1,6 +1,6 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.UserDao;
+import com.epam.am.dao.H2UserDao;
 import com.epam.am.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +16,8 @@ public class LoginCheckAction implements Action {
         String username = req.getParameter(USERNAME);
         String password = req.getParameter(PASSWORD);
 
-        UserDao userDao = new UserDao();
-        User user = userDao.findByCredentials(username, password);
+        H2UserDao userDao = new H2UserDao();
+        User user = userDao.findByCredentials(username, password, true);
         user = new User();
         if (user == null) {
             return login;

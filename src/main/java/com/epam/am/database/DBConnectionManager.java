@@ -1,4 +1,4 @@
-package com.epam.am.database.connection;
+package com.epam.am.database;
 
 import com.epam.am.helper.PropertyManager;
 import com.jolbox.bonecp.BoneCP;
@@ -51,6 +51,21 @@ public class DBConnectionManager {
     }
 
     public static void setConfig(BoneCPConfig config) {
-        DBConnectionManager.config = config;
+        if (!DBConnectionManager.config.equals(config))
+            DBConnectionManager.config = config;
+    }
+
+    public static BoneCP getH2ConnectionPool() throws SQLException {
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+        }
+        if (cp == null) {
+            if (config == null) {
+                config = getConfig(H2);
+            }
+            cp = new BoneCP(config);
+        }
+        return cp;
     }
 }

@@ -15,6 +15,7 @@ public class ActionFactory {
         ActionFactory.actions.put("GET/", new ShowPageAction("index"));
         ActionFactory.actions.put("GET/logout", new LogoutAction());
         ActionFactory.actions.put("GET/register", new ShowPageAction("register"));
+        ActionFactory.actions.put("POST/checkRegister", new RegisterCheckAction());
 
     }
 
