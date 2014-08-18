@@ -20,7 +20,7 @@ public class UrlFilter implements Filter {
         String pathInfo = req.getRequestURI().substring(req.getContextPath().length());
         System.out.println("---");
         System.out.println("UrlFilter : pathInfo: " + pathInfo);
-        if (pathInfo.startsWith("/static")) {
+        if (pathInfo.startsWith("/static") || pathInfo.endsWith("jsp")) {
             chain.doFilter(req, resp);
             return;
         }
