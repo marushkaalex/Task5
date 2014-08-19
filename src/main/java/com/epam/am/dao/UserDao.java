@@ -10,15 +10,27 @@ public interface UserDao {
 
     void add(User user) throws SQLException;
 
-    void remove(User user);
+    User findByUsernameAndPassword(String username, String password) throws SQLException;
 
-    void remove(UUID userId);
+    User findByEmailAndPassword(String email, String password) throws SQLException;
 
-    void remove(String word, boolean isFirstParUsername);
+    User findByUsername(String username) throws SQLException;
 
-    void update(User user);
+    User findByEmail(String email) throws SQLException;
 
-    User findByCredentials(String username, String password, boolean isFirstParUsername);
+    User find(User user) throws SQLException;
 
-    List<User> getUserList();
+    void remove(User user) throws SQLException;
+
+    void removeByUUID(UUID userId) throws SQLException;
+
+    void removeByEmail(String word) throws SQLException;
+
+    void removeByUsername(String word) throws SQLException;
+
+    void update(User user) throws SQLException;
+
+    List<String> isDuplicate(User user) throws SQLException;
+
+    List<User> getUserList() throws SQLException;
 }

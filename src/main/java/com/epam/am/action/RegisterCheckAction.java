@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.epam.am.database.DBHelper.USER.*;
 
@@ -49,24 +51,27 @@ public class RegisterCheckAction implements Action {
         System.out.println(email);
         System.out.println(password);
 
-        Map<String, Boolean> errorMap = new HashMap<>();
-        errorMap.put(USERNAME, isDuplicate(USERNAME, username));
-        errorMap.put(EMAIL, isDuplicate(EMAIL, email));
-
-        List<String> errorList = createErrorList(errorMap);
-        System.out.println("errorList size: " + errorList.size());
+        UserDao userDao = new H2UserDao();
+        List<String> errorList = null;
+        try {
+            errorList = userDao.isDuplicate(new User.Builder().username(username).email(email).build());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(errorList);
 
         if (errorList.size() == 0) {
-            User user = new User.Builder()
-                    .uuid(UUID.fromString(username))
-                    .username(username)
-                    .email(email)
-                    .password(password) // TODO password hash
-                    .role(User.Role.CLIENT)
-                    .build();
-            UserDao userDao = new H2UserDao();
             try {
+                User user = new User.Builder()
+                        .uuid(java.util.UUID.randomUUID())
+                        .username(username)
+                        .email(email)
+                        .password(password) // TODO password hash
+                        .role(User.Role.CLIENT)
+                        .build();
                 userDao.add(user);
+                req.getSession().setAttribute("user", user);
+                return home;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -83,26 +88,6 @@ public class RegisterCheckAction implements Action {
             }
         }
         return result;
-    }
-
-    private boolean isDuplicate(String column, String value) {
-        ResultSet resultSet = null;
-        switch (column) {
-            case USERNAME:
-                resultSet = select(USERNAME, TABLE, USERNAME, value);
-                break;
-            case EMAIL:
-                resultSet = select(EMAIL, TABLE, EMAIL, value);
-                break;
-        }
-        if (resultSet == null) throw new RuntimeException("resultSet == null");
-        try {
-            if (!resultSet.first())
-                return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     private ResultSet select(String column, String table, String where, String isWhat) {

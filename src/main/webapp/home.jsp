@@ -1,3 +1,4 @@
+<%@ page import="com.epam.am.entity.User" %>
 <%--
   Created by IntelliJ IDEA.
   User: Alexander
@@ -15,7 +16,7 @@
 <div style="align-self: center">
     <h2>
         <%
-            String a = session.getAttribute("username").toString();
+            String a = ((User) session.getAttribute("user")).getUsername();
             out.println("Hello " + a);
         %>
     </h2>

@@ -4,6 +4,7 @@ import com.epam.am.dao.H2UserDao;
 import com.epam.am.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 
 public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
@@ -17,8 +18,12 @@ public class LoginCheckAction implements Action {
         String password = req.getParameter(PASSWORD);
 
         H2UserDao userDao = new H2UserDao();
-        User user = userDao.findByCredentials(username, password, true);
-        user = new User();
+        User user = null;
+        try {
+            user = userDao.findByUsernameAndPassword(username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (user == null) {
             return login;
         }

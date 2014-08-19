@@ -1,4 +1,5 @@
-CREATE TABLE user(id UUID PRIMARY KEY,
+CREATE TABLE user(uuid UUID PRIMARY KEY,
 username VARCHAR(255),
 email VARCHAR(255),
-password VARCHAR(255));
+password VARCHAR(255),
+role VARCHAR(10));
