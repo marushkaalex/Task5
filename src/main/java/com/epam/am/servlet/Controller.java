@@ -13,8 +13,6 @@ import java.io.IOException;
 public class Controller extends javax.servlet.http.HttpServlet {
     private static java.util.logging.Logger log = java.util.logging.Logger.getLogger("");
 
-    //TODO CSS doesn't load
-
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo().contains("static")) {

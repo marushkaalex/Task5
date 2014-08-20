@@ -23,14 +23,18 @@
     </label>
     <input type="submit"><br>
 </form>
-<c:set var="errorList" scope="page" value="${requestScope.errorList}"/>
-<c:if test="${errorList != null}">
+<c:set var="errorList" scope="page" value="${sessionScope.register_errorList}"/>
+<c:out value="${errorList}"/>
+<c:if test="${errorList != null || errorList.size() == 0}">
     <h2>There are some errors</h2>
     <ul>
-        <c:forEach var="i" begin="0" end="${errorList.size()} - 1">
+        <c:forEach var="i" begin="0" end="${errorList.size() - 1}">
             <li><c:out value="${errorList.get(i)}"/></li>
         </c:forEach>
     </ul>
 </c:if>
+<%
+    session.removeAttribute("register_errorList");
+%>
 </body>
 </html>

@@ -9,13 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.epam.am.database.DBHelper.USER.*;
 
@@ -27,7 +22,7 @@ public class RegisterCheckAction implements Action {
     private static final BoneCP pool;
 
     private ActionResult register = new ActionResult("register", true);
-    private ActionResult home = new ActionResult("home");
+    private ActionResult home = new ActionResult("home", true);
 
     static {
         BoneCP tmp = null;
@@ -55,10 +50,11 @@ public class RegisterCheckAction implements Action {
         List<String> errorList = null;
         try {
             errorList = userDao.isDuplicate(new User.Builder().username(username).email(email).build());
+            System.out.println("errorList: " + errorList);
+            req.getSession().setAttribute("register_errorList", errorList);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(errorList);
 
         if (errorList.size() == 0) {
             try {
@@ -78,30 +74,5 @@ public class RegisterCheckAction implements Action {
         }
 
         return register;
-    }
-
-    private List<String> createErrorList(Map<String, Boolean> errorMap) {
-        List<String> result = new ArrayList<>();
-        for (Map.Entry<String, Boolean> stringBooleanEntry : errorMap.entrySet()) {
-            if (stringBooleanEntry.getValue()) {
-                result.add(stringBooleanEntry.getKey());
-            }
-        }
-        return result;
-    }
-
-    private ResultSet select(String column, String table, String where, String isWhat) {
-        ResultSet resultSet = null;
-        try {
-            Connection connection = pool.getConnection();
-            if (connection == null) throw new RuntimeException("no connection");
-            PreparedStatement statement = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE ?=?");
-            statement.setString(1, where);
-            statement.setString(2, isWhat);
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resultSet;
     }
 }
