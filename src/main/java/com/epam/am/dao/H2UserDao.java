@@ -95,7 +95,9 @@ public class H2UserDao implements UserDao {
         } catch (SQLException e) {
             throw e;
         } finally {
-            closeAndCommit(preparedStatement);
+            if (preparedStatement != null) {
+                closeAndCommit(preparedStatement);
+            }
         }
     }
 

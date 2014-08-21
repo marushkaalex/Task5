@@ -16,8 +16,6 @@ import static com.epam.am.database.DBHelper.USER.*;
 
 public class RegisterCheckAction implements Action {
 
-    //TODO something
-
     private static final Logger log = LoggerFactory.getLogger(RegisterCheckAction.class);
     private static final BoneCP pool;
 
@@ -56,7 +54,7 @@ public class RegisterCheckAction implements Action {
             e.printStackTrace();
         }
 
-        if (errorList.size() == 0) {
+        if (errorList != null && errorList.size() == 0) {
             try {
                 User user = new User.Builder()
                         .uuid(java.util.UUID.randomUUID())

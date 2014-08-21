@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UrlFilter implements Filter {
+public class SecurityFilter implements Filter {
 
-    private static java.util.logging.Logger log = java.util.logging.Logger.getLogger("");
+    public static final String ADMIN_HEADER = "<dib style=\"position: fixed; padding: 10px; background: aliceblue; text-align: center; width: 100%; top: 0; left: 0px\">If you see it you probably an admin</dib>";
 
     public void destroy() {
     }
@@ -17,15 +17,11 @@ public class UrlFilter implements Filter {
     }
 
     private void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws ServletException, IOException {
-        String pathInfo = req.getRequestURI().substring(req.getContextPath().length());
-        System.out.println(pathInfo);
-        if (pathInfo.startsWith("/static") || pathInfo.endsWith("jsp")) {
-            chain.doFilter(req, resp);
-            return;
-        }
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/do" + pathInfo);
-        dispatcher.forward(req, resp);
-//        chain.doFilter(req, resp);
+//        User user = (User) req.getSession().getAttribute("user");
+//        if (user != null) {
+//            resp.getWriter().write(ADMIN_HEADER);
+//        }
+        chain.doFilter(req, resp);
     }
 
     public void init(FilterConfig config) throws ServletException {

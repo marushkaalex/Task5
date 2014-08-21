@@ -28,7 +28,7 @@ public class LoginCheckAction implements Action {
             return login;
         }
 
-        req.getSession().setAttribute(USERNAME, username);
+        req.getSession().setAttribute("user", user);
         return home;
     }
 

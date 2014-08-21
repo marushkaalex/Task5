@@ -13,7 +13,7 @@
 
     <title>Login Form - CodePen</title>
 
-    <link rel="stylesheet" href="static/style/css/style.css" media="screen" type="text/css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
 
 </head>
 
@@ -25,8 +25,8 @@
     <div id="triangle"></div>
     <h1></h1>
 
-    <form action="${pageContext.request.contextPath}/logincheck" method="post">
-    <input type="text" placeholder="Username" name="username"/>
+    <form action="${pageContext.request.contextPath}/login" method="post">
+        <input type="text" placeholder="Username" name="username"/>
         <input type="password" placeholder="Password" name="password"/>
         <input type="submit" value="Submit"/>
     </form>
