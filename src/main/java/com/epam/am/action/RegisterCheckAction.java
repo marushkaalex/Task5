@@ -21,7 +21,7 @@ public class RegisterCheckAction implements Action {
     private static final Logger log = LoggerFactory.getLogger(RegisterCheckAction.class);
     private static final BoneCP pool;
 
-    private ActionResult register = new ActionResult("register", true);
+    private ActionResult register = new ActionResult("register");
     private ActionResult home = new ActionResult("home", true);
 
     static {
@@ -51,7 +51,7 @@ public class RegisterCheckAction implements Action {
         try {
             errorList = userDao.isDuplicate(new User.Builder().username(username).email(email).build());
             System.out.println("errorList: " + errorList);
-            req.getSession().setAttribute("register_errorList", errorList);
+            req.setAttribute("register_errorList", errorList);
         } catch (SQLException e) {
             e.printStackTrace();
         }

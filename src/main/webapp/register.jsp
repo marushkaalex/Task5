@@ -8,14 +8,14 @@
 <body>
 <h1>Registration Form</h1>
 
-<form action="checkRegister" method="post">
+<form action="register" method="post">
     <label>
         Username:
         <input type="text" name="username"><br>
     </label>
     <label>
         Email:
-        <input type="email" name="email"><br>
+        <input type="text" name="email"><br>
     </label>
     <label>
         Password:
@@ -23,7 +23,7 @@
     </label>
     <input type="submit"><br>
 </form>
-<c:set var="errorList" scope="page" value="${sessionScope.register_errorList}"/>
+<c:set var="errorList" scope="page" value="${requestScope.register_errorList}"/>
 <c:out value="${errorList}"/>
 <c:if test="${errorList != null || errorList.size() == 0}">
     <h2>There are some errors</h2>

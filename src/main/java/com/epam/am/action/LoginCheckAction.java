@@ -10,7 +10,7 @@ public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
     private ActionResult home = new ActionResult("home", true);
-    private ActionResult login = new ActionResult("login");
+    private ActionResult login = new ActionResult("login", true);
 
     @Override
     public ActionResult execute(HttpServletRequest req) {
