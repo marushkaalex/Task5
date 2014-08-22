@@ -2,14 +2,15 @@ package com.epam.am.action;
 
 import com.epam.am.dao.H2UserDao;
 import com.epam.am.dao.UserDao;
-import com.epam.am.database.DBConnectionManager;
 import com.epam.am.entity.User;
-import com.jolbox.bonecp.BoneCP;
+import com.epam.am.helper.HashCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static com.epam.am.database.DBHelper.USER.*;
@@ -17,20 +18,9 @@ import static com.epam.am.database.DBHelper.USER.*;
 public class RegisterCheckAction implements Action {
 
     private static final Logger log = LoggerFactory.getLogger(RegisterCheckAction.class);
-    private static final BoneCP pool;
-
+    private static final int MIN_LETTERS = 3;
     private ActionResult register = new ActionResult("register");
     private ActionResult home = new ActionResult("home", true);
-
-    static {
-        BoneCP tmp = null;
-        try {
-            tmp = DBConnectionManager.getH2ConnectionPool();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        pool = tmp;
-    }
 
     public RegisterCheckAction() {
     }
@@ -40,9 +30,8 @@ public class RegisterCheckAction implements Action {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        System.out.println(username);
-        System.out.println(email);
-        System.out.println(password);
+        String role = req.getParameter(ROLE);
+        String date = req.getParameter(DATE_OF_BIRTH);
 
         UserDao userDao = new H2UserDao();
         List<String> errorList = null;
@@ -56,17 +45,22 @@ public class RegisterCheckAction implements Action {
 
         if (errorList != null && errorList.size() == 0) {
             try {
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
                 User user = new User.Builder()
-                        .uuid(java.util.UUID.randomUUID())
                         .username(username)
                         .email(email)
-                        .password(password) // TODO password hash
-                        .role(User.Role.CLIENT)
+                        .password(HashCalculator.hash(password)) // TODO password hash
+                        .role(User.Role.valueOf(role))
+                        .dateOfBirth(format.parse(date))
                         .build();
                 userDao.add(user);
                 req.getSession().setAttribute("user", user);
                 return home;
             } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }

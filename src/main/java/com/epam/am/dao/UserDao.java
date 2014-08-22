@@ -4,11 +4,10 @@ import com.epam.am.entity.User;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 public interface UserDao {
 
-    void add(User user) throws SQLException;
+    long add(User user) throws SQLException;
 
     User findByUsernameAndPassword(String username, String password) throws SQLException;
 
@@ -22,7 +21,7 @@ public interface UserDao {
 
     void remove(User user) throws SQLException;
 
-    void removeByUUID(UUID userId) throws SQLException;
+    void removeByID(long userId) throws SQLException;
 
     void removeByEmail(String word) throws SQLException;
 

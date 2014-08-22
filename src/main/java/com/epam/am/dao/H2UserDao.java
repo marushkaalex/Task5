@@ -8,7 +8,6 @@ import com.jolbox.bonecp.BoneCP;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.epam.am.database.DBHelper.USER.*;
 
@@ -20,15 +19,17 @@ public class H2UserDao implements UserDao {
             "SELECT * FROM " + TABLE + " WHERE " + USERNAME + "=? AND " + PASSWORD + "=?";
     private static final String FIND_BY_EMAIL_AND_PASSWORD =
             "SELECT * FROM " + TABLE + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?";
-    private static final String ADD = "INSERT INTO " + TABLE + " VALUES (?,?,?,?,?)";
-    private static final String REMOVE_BY_UUID = "DELETE FROM " + TABLE + " WHERE " + DBHelper.USER.UUID + "=?";
+    private static final String ADD
+            = "INSERT INTO " + TABLE + "(" + USERNAME + "," + EMAIL + ","
+            + PASSWORD + "," + ROLE + "," + DATE_OF_BIRTH + ") VALUES (?,?,?,?,?)";
+    private static final String REMOVE_BY_ID = "DELETE FROM " + TABLE + " WHERE " + DBHelper.USER.ID + "=?";
     private static final String REMOVE_BY_EMAIL = "DELETE FROM " + TABLE + " WHERE " + EMAIL + "=?";
     private static final String REMOVE_BY_USERNAME = "DELETE FROM " + TABLE + " WHERE " + USERNAME + "=?";
     private static final String UPDATE = "UPDATE " + TABLE + " SET " + USERNAME + "=?, "
-            + EMAIL + "=?, " + PASSWORD + "=?, " + ROLE + "=? WHERE " + UUID + "=?";
+            + EMAIL + "=?, " + PASSWORD + "=?, " + ROLE + "=?," + DATE_OF_BIRTH + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
     private static final String IS_DUPLICATE = "SELECT " + USERNAME + ", " + EMAIL + " FROM " + TABLE + " WHERE " +
-            UUID + "=? OR " + USERNAME + "=? OR " + EMAIL + "=?";
+            ID + "=? OR " + USERNAME + "=? OR " + EMAIL + "=?";
 
     private static final BoneCP pool;
 
@@ -125,28 +126,42 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public void add(User user) throws SQLException {
+    public long add(User user) throws SQLException {
         Connection connection = pool.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ADD);
-        preparedStatement.setObject(1, user.getUuid());
-        preparedStatement.setString(2, user.getUsername());
-        preparedStatement.setString(3, user.getEmail());
-        preparedStatement.setString(4, user.getPassword());
-        preparedStatement.setString(5, user.getRole().toString());
-        preparedStatement.execute();
+        PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, user.getEmail());
+        preparedStatement.setString(3, user.getPassword());
+        preparedStatement.setInt(4, user.getRole().ordinal());
+        Date date = new Date(user.getDob().getTime());
+        preparedStatement.setDate(5, date);
+        int affectedRows = preparedStatement.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed: no rows affected");
+        }
+
+        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+        long id = -1;
+        if (generatedKeys.next()) {
+            id = generatedKeys.getLong(1);
+            user.setId(id);
+        } else {
+            throw new SQLException("Creating user failed: no ID obtained");
+        }
         closeAndCommit(preparedStatement);
+        return id;
     }
 
     @Override
     public void remove(User user) throws SQLException {
-        removeByUUID(user.getUuid());
+        removeByID(user.getId());
     }
 
     @Override
-    public void removeByUUID(UUID userId) throws SQLException {
+    public void removeByID(long userId) throws SQLException {
         Connection connection = pool.getConnection();
         PreparedStatement preparedStatement =
-                connection.prepareStatement(REMOVE_BY_UUID);
+                connection.prepareStatement(REMOVE_BY_ID);
         preparedStatement.setObject(1, userId);
         preparedStatement.execute();
         closeAndCommit(preparedStatement);
@@ -179,8 +194,9 @@ public class H2UserDao implements UserDao {
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getEmail());
         preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setString(4, user.getRole().toString());
-        preparedStatement.setObject(5, user.getUuid());
+        preparedStatement.setInt(4, user.getRole().ordinal());
+        preparedStatement.setDate(5, new Date(user.getDob().getTime()));
+        preparedStatement.setLong(6, user.getId());
         preparedStatement.execute();
         closeAndCommit(preparedStatement);
     }
@@ -199,16 +215,18 @@ public class H2UserDao implements UserDao {
     }
 
     private User createUser(ResultSet resultSet) throws SQLException {
-        UUID uuid = ((UUID) resultSet.getObject(DBHelper.USER.UUID));
+        long id = resultSet.getLong(DBHelper.USER.ID);
         String username = resultSet.getString(USERNAME);
         String email = resultSet.getString(EMAIL);
         String password = resultSet.getString(PASSWORD);
-        User.Role role = User.Role.valueOf(resultSet.getString(ROLE));
-        return new User.Builder().uuid(uuid)
+        User.Role role = User.Role.values()[resultSet.getInt(ROLE)];
+        Date dob = resultSet.getDate(DATE_OF_BIRTH);
+        return new User.Builder().id(id)
                 .username(username)
                 .email(email)
                 .password(password)
                 .role(role)
+                .dateOfBirth(dob)
                 .build();
     }
 
@@ -216,7 +234,7 @@ public class H2UserDao implements UserDao {
     public List<String> isDuplicate(User user) throws SQLException {
         Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(IS_DUPLICATE);
-        preparedStatement.setObject(1, user.getUuid());
+        preparedStatement.setObject(1, user.getId());
         preparedStatement.setString(2, user.getUsername());
         preparedStatement.setString(3, user.getEmail());
         ResultSet resultSet = preparedStatement.executeQuery();

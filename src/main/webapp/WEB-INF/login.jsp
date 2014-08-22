@@ -26,8 +26,8 @@
     <h1></h1>
 
     <form action="${pageContext.request.contextPath}/login" method="post">
-        <input type="text" placeholder="Username" name="username"/>
-        <input type="password" placeholder="Password" name="password"/>
+        <input type="text" placeholder="Username" name="username" required autofocus/>
+        <input type="password" placeholder="Password" name="password" required/>
         <input type="submit" value="Submit"/>
     </form>
 </div>

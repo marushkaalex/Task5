@@ -1,28 +1,30 @@
 package com.epam.am.entity;
 
-import java.util.UUID;
+import java.util.Date;
 
 public class User {
-    private UUID uuid;
+    private long id;
     private String username;
     private String email;
     private String password;
     private Role role;
+    private Date dob;
 
-    public User(UUID uuid, String username, String email, String password, Role role) {
-        this.uuid = uuid;
+    public User(long id, String username, String email, String password, Role role, Date dob) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.dob = dob;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public long getId() {
+        return id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -47,7 +49,6 @@ public class User {
 
     public void setRole(Role role) {
 
-
         this.role = role;
     }
 
@@ -59,14 +60,23 @@ public class User {
         this.password = password;
     }
 
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "uuid=" + uuid +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
+                ", dob=" + dob +
                 '}';
     }
 
@@ -77,29 +87,30 @@ public class User {
 
         User user = (User) o;
 
-        if (uuid != null ? !uuid.equals(user.uuid) : user.uuid != null) return false;
+        if (id != user.id) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return uuid != null ? uuid.hashCode() : 0;
+        return (int) (id ^ (id >>> 32));
     }
 
     public enum Role {
-        ADMIN, CLIENT
+        ADMIN, ARTIST, CLIENT
     }
 
     public static class Builder {
-        private UUID uuid;
+        private long id;
         private String username;
         private String email;
         private Role role;
         private String password;
+        private Date dateOfBirth;
 
-        public Builder uuid(UUID uuid) {
-            this.uuid = uuid;
+        public Builder id(long uuid) {
+            this.id = uuid;
             return this;
         }
 
@@ -123,8 +134,16 @@ public class User {
             return this;
         }
 
+        public Builder dateOfBirth(Date dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
         public User build() {
-            return new User(uuid, username, email, password, role);
+            if (dateOfBirth == null) {
+                dateOfBirth = new Date();
+            }
+            return new User(id, username, email, password, role, dateOfBirth);
         }
     }
 }

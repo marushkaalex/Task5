@@ -1,14 +1,10 @@
 package com.epam.am;
 
-import com.epam.am.dao.H2UserDao;
-import com.epam.am.dao.UserDao;
-import com.epam.am.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 //TODO servlet
 //TODO database
@@ -25,19 +21,21 @@ import java.util.UUID;
 public class Runner {
     private static Logger log = LoggerFactory.getLogger(Runner.class);
 
+    //TODO look in the skype \o/
     public static void main(String[] args) throws SQLException {
-        UserDao userDao = new H2UserDao();
-        User user = new User.Builder().username("username1")
-                .uuid(UUID.randomUUID())
-                .email("email@email.com")
-                .password("password")
-                .role(User.Role.CLIENT)
-                .build();
-//        userDao.add(user);
-//        User user1 = userDao.findByUsernameAndPassword("username", "password");
+//        UserDao userDao = new H2UserDao();
+//        User user = new User.Builder().username("username1")
+//                .uuid(ID.randomUUID())
+//                .email("email@email.com")
+//                .password("password")
+//                .role(User.Role.CLIENT)
+//                .build();
+////        userDao.add(user);
+////        User user1 = userDao.findByUsernameAndPassword("username", "password");
+////        System.out.println(user1);
+//        User user1 = userDao.findByUsername("user");
 //        System.out.println(user1);
-        User user1 = userDao.findByUsername("user");
-        System.out.println(user1);
+
     }
 
     private static void listPrint(List list) {
