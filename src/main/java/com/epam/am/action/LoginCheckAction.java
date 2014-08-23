@@ -1,6 +1,8 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.H2UserDao;
+import com.epam.am.dao.DaoFactory;
+import com.epam.am.dao.H2DaoFactory;
+import com.epam.am.dao.UserDao;
 import com.epam.am.entity.User;
 import com.epam.am.helper.HashCalculator;
 
@@ -20,9 +22,11 @@ public class LoginCheckAction implements Action {
 
         password = HashCalculator.hash(password);
 
-        H2UserDao userDao = new H2UserDao();
+        DaoFactory daoFactory = new H2DaoFactory();
+        UserDao userDao;
         User user = null;
         try {
+            userDao = daoFactory.getUserDao();
             user = userDao.findByUsernameAndPassword(username, password);
         } catch (SQLException e) {
             e.printStackTrace();

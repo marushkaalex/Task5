@@ -1,14 +1,13 @@
 package com.epam.am.dao;
 
-import com.epam.am.database.DBConnectionManager;
 import com.epam.am.database.DBHelper;
 import com.epam.am.entity.User;
-import com.jolbox.bonecp.BoneCP;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.epam.am.dao.DaoUtil.close;
 import static com.epam.am.database.DBHelper.USER.*;
 
 public class H2UserDao implements UserDao {
@@ -31,30 +30,16 @@ public class H2UserDao implements UserDao {
     private static final String IS_DUPLICATE = "SELECT " + USERNAME + ", " + EMAIL + " FROM " + TABLE + " WHERE " +
             ID + "=? OR " + USERNAME + "=? OR " + EMAIL + "=?";
 
-    private static final BoneCP pool;
+    private final Connection connection;
 
-    static {
-        BoneCP tmp = null;
-        try {
-            tmp = DBConnectionManager.getH2ConnectionPool();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        pool = tmp;
-    }
-
-    private void closeAndCommit(Statement statement) throws SQLException {
-        Connection connection = statement.getConnection();
-        statement.close();
-        connection.commit();
-        connection.close();
+    public H2UserDao(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
     public User findByUsername(String username) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
-            Connection connection = pool.getConnection();
             preparedStatement = connection.prepareStatement(FIND_BY_USERNAME);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,7 +47,7 @@ public class H2UserDao implements UserDao {
         } catch (SQLException e) {
             throw e;
         } finally {
-            closeAndCommit(preparedStatement);
+            close(preparedStatement);
         }
     }
 
@@ -70,7 +55,6 @@ public class H2UserDao implements UserDao {
     public User findByEmail(String email) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
-            Connection connection = pool.getConnection();
             preparedStatement = connection.prepareStatement(FIND_BY_EMAIL);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -78,7 +62,7 @@ public class H2UserDao implements UserDao {
         } catch (SQLException e) {
             throw e;
         } finally {
-            closeAndCommit(preparedStatement);
+            close(preparedStatement);
         }
     }
 
@@ -86,7 +70,6 @@ public class H2UserDao implements UserDao {
     public User findByUsernameAndPassword(String username, String password) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
-            Connection connection = pool.getConnection();
             preparedStatement =
                     connection.prepareStatement(FIND_BY_USERNAME_AND_PASSWORD);
             preparedStatement.setString(1, username);
@@ -97,7 +80,7 @@ public class H2UserDao implements UserDao {
             throw e;
         } finally {
             if (preparedStatement != null) {
-                closeAndCommit(preparedStatement);
+                close(preparedStatement);
             }
         }
     }
@@ -106,7 +89,6 @@ public class H2UserDao implements UserDao {
     public User findByEmailAndPassword(String email, String password) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
-            Connection connection = pool.getConnection();
             preparedStatement =
                     connection.prepareStatement(FIND_BY_EMAIL_AND_PASSWORD);
             preparedStatement.setString(1, email);
@@ -116,7 +98,7 @@ public class H2UserDao implements UserDao {
         } catch (SQLException e) {
             throw e;
         } finally {
-            closeAndCommit(preparedStatement);
+            close(preparedStatement);
         }
     }
 
@@ -127,7 +109,6 @@ public class H2UserDao implements UserDao {
 
     @Override
     public long add(User user) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getEmail());
@@ -148,7 +129,7 @@ public class H2UserDao implements UserDao {
         } else {
             throw new SQLException("Creating user failed: no ID obtained");
         }
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
         return id;
     }
 
@@ -159,37 +140,33 @@ public class H2UserDao implements UserDao {
 
     @Override
     public void removeByID(long userId) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_ID);
         preparedStatement.setObject(1, userId);
         preparedStatement.execute();
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
     }
 
     @Override
     public void removeByEmail(String email) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_EMAIL);
         preparedStatement.setObject(1, email);
         preparedStatement.execute();
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
     }
 
     @Override
     public void removeByUsername(String username) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_USERNAME);
         preparedStatement.setObject(1, username);
         preparedStatement.execute();
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
     }
 
     @Override
     public void update(User user) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getEmail());
@@ -198,19 +175,18 @@ public class H2UserDao implements UserDao {
         preparedStatement.setDate(5, new Date(user.getDob().getTime()));
         preparedStatement.setLong(6, user.getId());
         preparedStatement.execute();
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
     }
 
     @Override
     public List<User> getUserList() throws SQLException {
         List<User> result = new ArrayList<>();
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             result.add(createUser(resultSet));
         }
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
         return result;
     }
 
@@ -232,7 +208,6 @@ public class H2UserDao implements UserDao {
 
     @Override
     public List<String> isDuplicate(User user) throws SQLException {
-        Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(IS_DUPLICATE);
         preparedStatement.setObject(1, user.getId());
         preparedStatement.setString(2, user.getUsername());
@@ -244,7 +219,7 @@ public class H2UserDao implements UserDao {
             if (resultSet.getString(USERNAME).equals(user.getUsername())) result.add(user.getUsername());
             if (resultSet.getString(EMAIL).equals(user.getEmail())) result.add(user.getEmail());
         }
-        closeAndCommit(preparedStatement);
+        close(preparedStatement);
         return result;
     }
 }

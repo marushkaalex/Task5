@@ -31,10 +31,17 @@ public class H2UserDaoTest {
     private static final User userToRemoveByUsername;
     private static final User userToBeUpdated;
     private static final User userToUpdate;
-    private static UserDao userDao = new H2UserDao();
+    private static UserDao userDao;
     private static List<User> users;
 
     static {
+
+        try {
+            userDao = new H2DaoFactory().getUserDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         userToFind = new User.Builder()
                 .username(USERNAME_TO_FIND)
                 .email(EMAIL_TO_FIND)

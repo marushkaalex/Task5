@@ -1,6 +1,7 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.H2UserDao;
+import com.epam.am.dao.DaoFactory;
+import com.epam.am.dao.H2DaoFactory;
 import com.epam.am.dao.UserDao;
 import com.epam.am.entity.User;
 import com.epam.am.helper.HashCalculator;
@@ -33,9 +34,11 @@ public class RegisterCheckAction implements Action {
         String role = req.getParameter(ROLE);
         String date = req.getParameter(DATE_OF_BIRTH);
 
-        UserDao userDao = new H2UserDao();
+        DaoFactory daoFactory = new H2DaoFactory();
+        UserDao userDao = null;
         List<String> errorList = null;
         try {
+            userDao = daoFactory.getUserDao();
             errorList = userDao.isDuplicate(new User.Builder().username(username).email(email).build());
             System.out.println("errorList: " + errorList);
             req.setAttribute("register_errorList", errorList);
