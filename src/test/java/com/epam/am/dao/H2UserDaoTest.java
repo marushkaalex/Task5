@@ -33,11 +33,14 @@ public class H2UserDaoTest {
     private static final User userToUpdate;
     private static UserDao userDao;
     private static List<User> users;
+    private static DaoFactory daoFactory;
 
     static {
 
         try {
-            userDao = new H2DaoFactory().getUserDao();
+            daoFactory = new H2DaoFactory();
+            daoFactory.open();
+            userDao = daoFactory.getUserDao();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,6 +90,8 @@ public class H2UserDaoTest {
     @BeforeClass
     public static void oneTimeSetUp() throws SQLException {
 
+        daoFactory.open();
+
         for (User user : users) {
             userDao.add(user);
         }
@@ -103,6 +108,8 @@ public class H2UserDaoTest {
         }
         userDao.remove(userToAdd);
         userDao.remove(userToUpdate);
+
+        daoFactory.close();
     }
 
     @Before

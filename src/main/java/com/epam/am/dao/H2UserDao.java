@@ -36,8 +36,15 @@ public class H2UserDao implements UserDao {
         this.connection = connection;
     }
 
+    private void checkConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            throw new SQLException("no connection");
+        }
+    }
+
     @Override
     public User findByUsername(String username) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(FIND_BY_USERNAME);
@@ -53,6 +60,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public User findByEmail(String email) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(FIND_BY_EMAIL);
@@ -68,6 +76,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public User findByUsernameAndPassword(String username, String password) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement =
@@ -87,6 +96,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public User findByEmailAndPassword(String email, String password) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement =
@@ -109,6 +119,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public long add(User user) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getEmail());
@@ -140,6 +151,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public void removeByID(long userId) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_ID);
         preparedStatement.setObject(1, userId);
@@ -149,6 +161,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public void removeByEmail(String email) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_EMAIL);
         preparedStatement.setObject(1, email);
@@ -158,6 +171,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public void removeByUsername(String username) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement(REMOVE_BY_USERNAME);
         preparedStatement.setObject(1, username);
@@ -167,6 +181,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public void update(User user) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
         preparedStatement.setString(1, user.getUsername());
         preparedStatement.setString(2, user.getEmail());
@@ -180,6 +195,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public List<User> getUserList() throws SQLException {
+        checkConnection();
         List<User> result = new ArrayList<>();
         PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -191,6 +207,7 @@ public class H2UserDao implements UserDao {
     }
 
     private User createUser(ResultSet resultSet) throws SQLException {
+        checkConnection();
         long id = resultSet.getLong(DBHelper.USER.ID);
         String username = resultSet.getString(USERNAME);
         String email = resultSet.getString(EMAIL);
@@ -208,6 +225,7 @@ public class H2UserDao implements UserDao {
 
     @Override
     public List<String> isDuplicate(User user) throws SQLException {
+        checkConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(IS_DUPLICATE);
         preparedStatement.setObject(1, user.getId());
         preparedStatement.setString(2, user.getUsername());
