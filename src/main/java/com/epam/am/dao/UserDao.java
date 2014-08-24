@@ -19,6 +19,8 @@ public interface UserDao {
 
     User find(User user) throws SQLException;
 
+    User find(long id) throws SQLException;
+
     void remove(User user) throws SQLException;
 
     void removeByID(long userId) throws SQLException;

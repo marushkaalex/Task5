@@ -10,6 +10,7 @@ public class H2DaoFactory implements DaoFactory {
 
     private static final BoneCP pool;
     private static Connection connection;
+    private UserDao userDao;
 
     static {
         BoneCP tmp = null;
@@ -23,12 +24,18 @@ public class H2DaoFactory implements DaoFactory {
 
     @Override
     public Connection getConnection() throws SQLException {
+        if (connection == null) {
+            connection = pool.getConnection();
+        }
         return connection;
     }
 
     @Override
     public UserDao getUserDao() throws SQLException {
-        return new H2UserDao(getConnection());
+        if (userDao == null) {
+            userDao = new H2UserDao(getConnection());
+        }
+        return userDao;
     }
 
     @Override

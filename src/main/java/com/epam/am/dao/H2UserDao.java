@@ -14,6 +14,7 @@ public class H2UserDao implements UserDao {
 
     private static final String FIND_BY_USERNAME = "SELECT * FROM " + TABLE + " WHERE " + USERNAME + "=?";
     private static final String FIND_BY_EMAIL = "SELECT * FROM " + TABLE + " WHERE " + EMAIL + "=?";
+    private static final String FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE " + ID + "=?";
     private static final String FIND_BY_USERNAME_AND_PASSWORD =
             "SELECT * FROM " + TABLE + " WHERE " + USERNAME + "=? AND " + PASSWORD + "=?";
     private static final String FIND_BY_EMAIL_AND_PASSWORD =
@@ -221,6 +222,22 @@ public class H2UserDao implements UserDao {
                 .role(role)
                 .dateOfBirth(dob)
                 .build();
+    }
+
+    @Override
+    public User find(long id) throws SQLException {
+        checkConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(FIND_BY_ID);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? createUser(resultSet) : null;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            close(preparedStatement);
+        }
     }
 
     @Override

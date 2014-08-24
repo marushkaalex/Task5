@@ -1,4 +1,4 @@
-<%@ page import="com.epam.am.entity.User" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: Alexander
@@ -7,6 +7,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setLocale value="${sessionScope.language}"/>
+<fmt:setBundle basename="i18n"/>
 <html>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
 <head>
@@ -15,12 +17,10 @@
 <body>
 <div style="align-self: center">
     <h2>
-        <%
-            String a = ((User) session.getAttribute("user")).getUsername();
-            out.println("Hello " + a);
-        %>
+        <fmt:message key="label.hello"/>
+        , <a href="acc">${sessionScope.user.username}</a>
     </h2>
-    <a href="logout">Logout</a>
+    <a href="logout"><fmt:message key="label.logout"/></a>
 </div>
 
 </body>

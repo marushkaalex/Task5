@@ -12,8 +12,8 @@ import java.sql.SQLException;
 public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
-    private ActionResult home = new ActionResult("home", true);
-    private ActionResult login = new ActionResult("login", false);
+    private ActionResult home = new ActionResult("", true);
+    private ActionResult login = new ActionResult("login");
 
     @Override
     public ActionResult execute(HttpServletRequest req) {
@@ -32,11 +32,12 @@ public class LoginCheckAction implements Action {
             e.printStackTrace();
         }
         if (user == null) {
-            req.setAttribute("error", ""); //TODO with resource bundle
+            req.setAttribute("error", "wrong username or password"); //TODO with resource bundle
             return login;
         }
 
         req.getSession().setAttribute("user", user);
+        req.getSession().setAttribute("language", "ru");
         return home;
     }
 

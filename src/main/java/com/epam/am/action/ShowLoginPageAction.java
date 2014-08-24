@@ -1,19 +1,21 @@
 package com.epam.am.action;
 
+import com.epam.am.entity.User;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class ShowLoginPageAction implements Action {
 
-    public static final String USERNAME = "username";
+    public static final String USER = "user";
     private ActionResult login = new ActionResult("login");
-    private ActionResult home = new ActionResult("home", true);
+    private ActionResult home = new ActionResult("", true);
 
     @Override
     public ActionResult execute(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        String username = (String) session.getAttribute(USERNAME);
-        if (username != null) return home;
+        User user = (User) session.getAttribute(USER);
+        if (user != null) return home;
         return login;
     }
 }

@@ -9,11 +9,13 @@ public class ActionFactory {
     static {
         ActionFactory.actions.put("GET/login", new ShowLoginPageAction());
         ActionFactory.actions.put("POST/login", new LoginCheckAction());
-        ActionFactory.actions.put("GET/home", new ShowPageAction("home"));
+        ActionFactory.actions.put("GET/home", req -> new ActionResult("", true));
         ActionFactory.actions.put("GET/index", new ShowPageAction("index"));
-        ActionFactory.actions.put("GET/", new ShowPageAction("index"));
+        ActionFactory.actions.put("GET/acc", new ShowPageIfLoggedInAction("acc", false, "login", true));
+        ActionFactory.actions.put("POST/acc", new ShowPageAction("acc"));
+        ActionFactory.actions.put("GET/", new ShowPageIfLoggedInAction("home", false, "index", false));
         ActionFactory.actions.put("GET/logout", new LogoutAction());
-        ActionFactory.actions.put("GET/register", new ShowPageAction("register"));
+        ActionFactory.actions.put("GET/register", new ShowPageIfLoggedInAction("", true, "register", false));
         ActionFactory.actions.put("POST/register", new RegisterCheckAction());
 
     }

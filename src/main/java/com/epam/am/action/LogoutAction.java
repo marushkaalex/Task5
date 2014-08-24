@@ -10,6 +10,6 @@ public class LogoutAction implements Action {
         session.removeAttribute("username");
         session.removeAttribute("password");
         session.invalidate();
-        return new ActionResult("index", true);
+        return new ActionResult("", true);
     }
 }
