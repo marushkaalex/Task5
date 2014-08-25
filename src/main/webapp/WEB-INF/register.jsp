@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
+<%--<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">--%>
+<link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.css"/>
 <head>
     <title>Registration</title>
 </head>

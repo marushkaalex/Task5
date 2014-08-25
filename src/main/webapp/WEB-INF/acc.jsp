@@ -1,13 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Администратор
-  Date: 24.08.2014
-  Time: 17:16
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
+<link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.css"/>
 <head>
     <title>User account</title>
 </head>
@@ -17,11 +11,11 @@
 
 <h1>${sessionScope.user.username}</h1><br>
 
-<form action="${pageContext.request.contextPath}/acc" method="post">
+<form action="${pageContext.request.contextPath}/acc" method="post" id="options">
     <label>
-        <select required name="language">
-            <option value="en">English</option>
-            <option value="ru">Russian</option>
+        <select required name="lang" form="options">
+            <option value="en" <c:if test="${sessionScope.lang == en}">select="select"</c:if>>English</option>
+            <option value="ru" <c:if test="${sessionScope.lang == ru}">select="select"</c:if>>Russian</option>
         </select>
     </label><br>
     <input type="submit">

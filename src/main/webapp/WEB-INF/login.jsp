@@ -7,7 +7,7 @@
 <html>
 <head>
     <title>Login Form - CodePen</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
+    <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.css"/>
 </head>
 <body>
 <span href="#" class="button" id="toggle-login">Log in</span>

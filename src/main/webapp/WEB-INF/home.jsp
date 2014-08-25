@@ -10,7 +10,7 @@
 <fmt:setLocale value="${sessionScope.language}"/>
 <fmt:setBundle basename="i18n"/>
 <html>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">
+<link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.css"/>
 <head>
     <title></title>
 </head>

@@ -12,7 +12,7 @@ public class ActionFactory {
         ActionFactory.actions.put("GET/home", req -> new ActionResult("", true));
         ActionFactory.actions.put("GET/index", new ShowPageAction("index"));
         ActionFactory.actions.put("GET/acc", new ShowPageIfLoggedInAction("acc", false, "login", true));
-        ActionFactory.actions.put("POST/acc", new ShowPageAction("acc"));
+        ActionFactory.actions.put("POST/acc", new CommitUserOptionsAction());
         ActionFactory.actions.put("GET/", new ShowPageIfLoggedInAction("home", false, "index", false));
         ActionFactory.actions.put("GET/logout", new LogoutAction());
         ActionFactory.actions.put("GET/register", new ShowPageIfLoggedInAction("", true, "register", false));

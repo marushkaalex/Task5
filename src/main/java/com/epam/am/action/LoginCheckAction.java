@@ -37,7 +37,7 @@ public class LoginCheckAction implements Action {
         }
 
         req.getSession().setAttribute("user", user);
-        req.getSession().setAttribute("language", "ru");
+        req.getSession().setAttribute("lang", "en");
         return home;
     }
 

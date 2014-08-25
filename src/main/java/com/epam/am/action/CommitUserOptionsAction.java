@@ -7,7 +7,9 @@ public class CommitUserOptionsAction implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest req) {
-        req.getAttribute("language");
+        String lang = ((String) req.getParameter("lang"));
+        System.out.println(lang);
+        req.getSession().setAttribute("language", lang);
         //TODO set language
         return acc;
     }
