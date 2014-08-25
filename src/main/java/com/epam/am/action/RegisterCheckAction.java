@@ -27,7 +27,7 @@ public class RegisterCheckAction implements Action {
     }
 
     @Override
-    public ActionResult execute(HttpServletRequest req) {
+    public ActionResult execute(HttpServletRequest req) throws ActionException {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
@@ -43,12 +43,11 @@ public class RegisterCheckAction implements Action {
             System.out.println("errorList: " + errorList);
             req.setAttribute("register_errorList", errorList);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ActionException("Exception while registration", e);
         }
 
         if (errorList != null && errorList.size() == 0) {
             try {
-
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
                 User user = new User.Builder()
@@ -62,9 +61,9 @@ public class RegisterCheckAction implements Action {
                 req.getSession().setAttribute("user", user);
                 return home;
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new ActionException("Exception while registration", e);
             } catch (ParseException e) {
-                e.printStackTrace();
+                throw new ActionException("Exception while registration", e);
             }
         }
 

@@ -16,7 +16,7 @@ public class LoginCheckAction implements Action {
     private ActionResult login = new ActionResult("login");
 
     @Override
-    public ActionResult execute(HttpServletRequest req) {
+    public ActionResult execute(HttpServletRequest req) throws ActionException {
         String username = req.getParameter(USERNAME);
         String password = req.getParameter(PASSWORD);
 
@@ -29,7 +29,7 @@ public class LoginCheckAction implements Action {
             userDao = daoFactory.getUserDao();
             user = userDao.findByUsernameAndPassword(username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ActionException("Exception while finding user", e);
         }
         if (user == null) {
             req.setAttribute("error", "wrong username or password"); //TODO with resource bundle

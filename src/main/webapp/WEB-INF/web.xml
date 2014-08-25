@@ -20,6 +20,14 @@
         <filter-name>UrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <servlet>
+        <servlet-name>ExceptionHandler</servlet-name>
+        <servlet-class>com.epam.am.servlet.ExceptionHandler</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExceptionHandler</servlet-name>
+        <url-pattern>/error</url-pattern>
+    </servlet-mapping>
 
     <filter>
         <filter-name>SecurityFilter</filter-name>
@@ -37,4 +45,7 @@
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <error-page>
+        <location>/error</location>
+    </error-page>
 </web-app>

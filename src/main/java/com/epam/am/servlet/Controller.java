@@ -1,6 +1,7 @@
 package com.epam.am.servlet;
 
 import com.epam.am.action.Action;
+import com.epam.am.action.ActionException;
 import com.epam.am.action.ActionFactory;
 import com.epam.am.action.ActionResult;
 
@@ -25,7 +26,12 @@ public class Controller extends javax.servlet.http.HttpServlet {
             resp.sendError(404, "No such action");
             return;
         }
-        ActionResult result = action.execute(req);
+        ActionResult result = null;
+        try {
+            result = action.execute(req);
+        } catch (ActionException e) {
+            e.printStackTrace();
+        }
 
         if (result.isRedirection()) {
             resp.sendRedirect(req.getContextPath() + "/" + result.getView());

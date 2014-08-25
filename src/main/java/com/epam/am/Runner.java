@@ -1,13 +1,9 @@
 package com.epam.am;
 
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 //TODO servlet
@@ -39,22 +35,8 @@ public class Runner {
 ////        System.out.println(user1);
 //        User user1 = userDao.findByUsername("user");
 //        System.out.println(user1);
-        BoneCPConfig config = new BoneCPConfig();
-        config.setJdbcUrl("jdbc:h2:tcp://localhost/~/task5/database");
-        config.setUsername("sa");
-        config.setPassword("sa");
-        config.setMaxConnectionsPerPartition(20);
-        System.out.println("--- creating cp");
-        BoneCP cp = new BoneCP(config);
-        Connection connection = cp.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute("");
-        System.out.println(statement.isClosed());
-        System.out.println(connection.isClosed());
-        System.out.println("--- closing");
-        connection.close();
-        System.out.println(statement.isClosed());
-        System.out.println(connection.isClosed());
+        Logger log = LoggerFactory.getLogger(Runner.class);
+        log.error("message");
     }
 
     private static void listPrint(List list) {

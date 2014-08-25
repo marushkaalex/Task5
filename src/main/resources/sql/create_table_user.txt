@@ -15,3 +15,11 @@ role INT,
 dob DATE,
 PRIMARY KEY (id),
 FOREIGN KEY (role) REFERENCES role(id));
+
+CREATE SCHEMA IF NOT EXISTS LOG;
+
+CREATE TABLE LOG.LOGS(
+time DATE,
+classname VARCHAR(255),
+priority VARCHAR(5),
+message VARCHAR(255));
