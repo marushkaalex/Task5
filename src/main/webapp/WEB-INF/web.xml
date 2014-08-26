@@ -45,7 +45,13 @@
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <error-page>
-        <location>/error</location>
-    </error-page>
+    <listener>
+        <listener-class>
+            org.apache.commons.fileupload.servlet.FileCleanerCleanup
+        </listener-class>
+    </listener>
+
+    <!--<error-page>-->
+    <!--<location>/error</location>-->
+    <!--</error-page>-->
 </web-app>

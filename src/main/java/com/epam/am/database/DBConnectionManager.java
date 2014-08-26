@@ -1,6 +1,6 @@
 package com.epam.am.database;
 
-import com.epam.am.helper.PropertyManager;
+import com.epam.am.util.PropertyManager;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import org.slf4j.Logger;

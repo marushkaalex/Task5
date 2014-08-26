@@ -1,4 +1,4 @@
-package com.epam.am.helper;
+package com.epam.am.util;
 
 import java.io.IOException;
 import java.io.InputStream;

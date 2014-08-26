@@ -30,4 +30,9 @@ public class ExceptionHandler extends HttpServlet {
         request.setAttribute("errorCode", statusCode);
         request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
     }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
 }

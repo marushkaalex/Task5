@@ -1,15 +1,15 @@
 package com.epam.am.action;
 
+import com.epam.am.dao.DaoException;
 import com.epam.am.dao.DaoFactory;
 import com.epam.am.dao.H2DaoFactory;
 import com.epam.am.dao.UserDao;
 import com.epam.am.entity.User;
-import com.epam.am.helper.HashCalculator;
+import com.epam.am.util.HashCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -42,7 +42,7 @@ public class RegisterCheckAction implements Action {
             errorList = userDao.isDuplicate(new User.Builder().username(username).email(email).build());
             System.out.println("errorList: " + errorList);
             req.setAttribute("register_errorList", errorList);
-        } catch (SQLException e) {
+        } catch (DaoException e) {
             throw new ActionException("Exception while registration", e);
         }
 
@@ -60,9 +60,9 @@ public class RegisterCheckAction implements Action {
                 userDao.add(user);
                 req.getSession().setAttribute("user", user);
                 return home;
-            } catch (SQLException e) {
-                throw new ActionException("Exception while registration", e);
             } catch (ParseException e) {
+                throw new ActionException("Exception while registration", e);
+            } catch (DaoException e) {
                 throw new ActionException("Exception while registration", e);
             }
         }

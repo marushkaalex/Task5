@@ -1,13 +1,13 @@
 package com.epam.am.action;
 
+import com.epam.am.dao.DaoException;
 import com.epam.am.dao.DaoFactory;
 import com.epam.am.dao.H2DaoFactory;
 import com.epam.am.dao.UserDao;
 import com.epam.am.entity.User;
-import com.epam.am.helper.HashCalculator;
+import com.epam.am.util.HashCalculator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 
 public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
@@ -28,7 +28,7 @@ public class LoginCheckAction implements Action {
         try {
             userDao = daoFactory.getUserDao();
             user = userDao.findByUsernameAndPassword(username, password);
-        } catch (SQLException e) {
+        } catch (DaoException e) {
             throw new ActionException("Exception while finding user", e);
         }
         if (user == null) {

@@ -3,7 +3,6 @@ package com.epam.am.dao;
 import com.epam.am.entity.User;
 import org.junit.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +40,7 @@ public class H2UserDaoTest {
             daoFactory = new H2DaoFactory();
             daoFactory.open();
             userDao = daoFactory.getUserDao();
-        } catch (SQLException e) {
+        } catch (DaoException e) {
             e.printStackTrace();
         }
 
@@ -88,7 +87,7 @@ public class H2UserDaoTest {
     }
 
     @BeforeClass
-    public static void oneTimeSetUp() throws SQLException {
+    public static void oneTimeSetUp() throws DaoException {
 
         daoFactory.open();
 
@@ -102,7 +101,7 @@ public class H2UserDaoTest {
     }
 
     @AfterClass
-    public static void oneTimeTearDown() throws SQLException {
+    public static void oneTimeTearDown() throws DaoException {
         for (User user : users) {
             userDao.remove(user);
         }

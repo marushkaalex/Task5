@@ -7,9 +7,11 @@ public interface DaoFactory {
 
     public Connection getConnection() throws SQLException;
 
-    public UserDao getUserDao() throws SQLException;
+    public UserDao getUserDao() throws DaoException;
 
-    void open() throws SQLException;
+    public PaintingDao getPaintingDao() throws DaoException;
 
-    void close() throws SQLException;
+    void open() throws DaoException;
+
+    void close() throws DaoException;
 }

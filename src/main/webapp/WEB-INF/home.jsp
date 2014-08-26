@@ -21,6 +21,11 @@
         , <a href="acc">${sessionScope.user.username}</a>
     </h2>
     <a href="logout"><fmt:message key="label.logout"/></a>
+
+    <form method="post" action="upload" enctype="multipart/form-data">
+        <input class="form-control" name="imageFile" type="file" accept="image/*">
+        <input type="submit">
+    </form>
 </div>
 
 </body>
