@@ -1,14 +1,13 @@
 package com.epam.am.dao;
 
 import com.epam.am.database.DBHelper;
-import com.epam.am.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.am.dao.DaoUtil.*;
-import static com.epam.am.database.DBHelper.USER.*;
+import static com.epam.am.database.DBHelper.UserTable.*;
 
 public class H2UserDao implements UserDao {
 
@@ -22,7 +21,7 @@ public class H2UserDao implements UserDao {
     private static final String ADD
             = "INSERT INTO " + TABLE + "(" + USERNAME + "," + EMAIL + ","
             + PASSWORD + "," + ROLE + "," + DATE_OF_BIRTH + ") VALUES (?,?,?,?,?)";
-    private static final String REMOVE_BY_ID = "DELETE FROM " + TABLE + " WHERE " + DBHelper.USER.ID + "=?";
+    private static final String REMOVE_BY_ID = "DELETE FROM " + TABLE + " WHERE " + DBHelper.UserTable.ID + "=?";
     private static final String REMOVE_BY_EMAIL = "DELETE FROM " + TABLE + " WHERE " + EMAIL + "=?";
     private static final String REMOVE_BY_USERNAME = "DELETE FROM " + TABLE + " WHERE " + USERNAME + "=?";
     private static final String UPDATE = "UPDATE " + TABLE + " SET " + USERNAME + "=?, "
@@ -38,22 +37,15 @@ public class H2UserDao implements UserDao {
     }
 
     private void checkConnection() throws DaoException {
-        try {
-            if (connection == null || connection.isClosed()) {
-                throw new DaoException("no connection");
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        DaoUtil.checkConnection(connection);
     }
 
     @Override
-    public User findByUsername(String username) throws DaoException {
+    public com.epam.am.entity.User findByUsername(String username) throws DaoException {
         PreparedStatement preparedStatement = null;
         try {
             checkConnection();
             preparedStatement = prepareStatement(connection, FIND_BY_USERNAME, false, username);
-//            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? createUser(resultSet) : null;
         } catch (SQLException e) {
@@ -64,7 +56,7 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public User findByEmail(String email) throws DaoException {
+    public com.epam.am.entity.User findByEmail(String email) throws DaoException {
         checkConnection();
         PreparedStatement preparedStatement = null;
         try {
@@ -79,7 +71,7 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public User findByUsernameAndPassword(String username, String password) throws DaoException {
+    public com.epam.am.entity.User findByUsernameAndPassword(String username, String password) throws DaoException {
         checkConnection();
         PreparedStatement preparedStatement = null;
         try {
@@ -97,10 +89,10 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public User findByEmailAndPassword(String email, String password) throws DaoException {
+    public com.epam.am.entity.User findByEmailAndPassword(String email, String password) throws DaoException {
+        checkConnection();
         PreparedStatement preparedStatement = null;
         try {
-            checkConnection();
             preparedStatement = prepareStatement(connection, FIND_BY_EMAIL_AND_PASSWORD, false, email, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? createUser(resultSet) : null;
@@ -112,16 +104,17 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public User find(User user) throws DaoException {
+    public com.epam.am.entity.User find(com.epam.am.entity.User user) throws DaoException {
         return findByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 
     @Override
-    public long add(User user) throws DaoException {
+    public long add(com.epam.am.entity.User user) throws DaoException {
+        checkConnection();
+        PreparedStatement preparedStatement = null;
         try {
-            checkConnection();
             Date date = new Date(user.getDob().getTime());
-            PreparedStatement preparedStatement = prepareStatement(connection, ADD, true,
+            preparedStatement = prepareStatement(connection, ADD, true,
                     user.getUsername(),
                     user.getEmail(),
                     user.getPassword(),
@@ -129,7 +122,7 @@ public class H2UserDao implements UserDao {
                     date);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new DaoException("Creating user failed: no rows affected");
+                throw new DaoException("Adding user failed: no rows affected");
             }
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             long id = -1;
@@ -139,15 +132,16 @@ public class H2UserDao implements UserDao {
             } else {
                 throw new DaoException("Creating user failed: no ID obtained");
             }
-            close(preparedStatement);
             return id;
         } catch (SQLException e) {
             throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
         }
     }
 
     @Override
-    public void remove(User user) throws DaoException {
+    public void remove(com.epam.am.entity.User user) throws DaoException {
         removeByID(user.getId());
     }
 
@@ -194,7 +188,7 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public void update(User user) throws DaoException {
+    public void update(com.epam.am.entity.User user) throws DaoException {
         checkConnection();
         PreparedStatement preparedStatement = null;
         try {
@@ -214,10 +208,10 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public List<User> getUserList() throws DaoException {
+    public List<com.epam.am.entity.User> getUserList() throws DaoException {
         try {
             checkConnection();
-            List<User> result = new ArrayList<>();
+            List<com.epam.am.entity.User> result = new ArrayList<>();
             PreparedStatement preparedStatement = prepareStatement(connection, GET_ALL, false);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -230,16 +224,15 @@ public class H2UserDao implements UserDao {
         }
     }
 
-    private User createUser(ResultSet resultSet) throws DaoException {
-        checkConnection();
+    private com.epam.am.entity.User createUser(ResultSet resultSet) throws DaoException {
         try {
-            long id = resultSet.getLong(DBHelper.USER.ID);
+            long id = resultSet.getLong(DBHelper.UserTable.ID);
             String username = resultSet.getString(USERNAME);
             String email = resultSet.getString(EMAIL);
             String password = resultSet.getString(PASSWORD);
-            User.Role role = User.Role.values()[resultSet.getInt(ROLE)];
+            com.epam.am.entity.User.Role role = com.epam.am.entity.User.Role.values()[resultSet.getInt(ROLE)];
             Date dob = resultSet.getDate(DATE_OF_BIRTH);
-            return new User.Builder().id(id)
+            return new com.epam.am.entity.User.Builder().id(id)
                     .username(username)
                     .email(email)
                     .password(password)
@@ -252,7 +245,7 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public User find(long id) throws DaoException {
+    public com.epam.am.entity.User find(long id) throws DaoException {
         checkConnection();
         PreparedStatement preparedStatement = null;
         try {
@@ -267,7 +260,7 @@ public class H2UserDao implements UserDao {
     }
 
     @Override
-    public List<String> isDuplicate(User user) throws DaoException {
+    public List<String> isDuplicate(com.epam.am.entity.User user) throws DaoException {
         PreparedStatement preparedStatement = null;
         try {
             checkConnection();

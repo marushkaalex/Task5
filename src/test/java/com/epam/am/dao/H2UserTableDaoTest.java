@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class H2UserDaoTest {
+public class H2UserTableDaoTest {
     public static final String USERNAME_TO_FIND = "testUsername";
     public static final String EMAIL_TO_FIND = "test@email.com";
     public static final String PASSWORD_TO_FIND = "testPassword";

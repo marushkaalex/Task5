@@ -1,5 +1,7 @@
 package com.epam.am;
 
+import com.epam.am.entity.Gallery;
+import com.epam.am.entity.Painting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,22 +23,12 @@ import java.util.List;
 public class Runner {
     private static Logger log = LoggerFactory.getLogger(Runner.class);
 
-    //TODO look in the skype \o/
     public static void main(String[] args) throws SQLException {
-//        UserDao userDao = new H2UserDao();
-//        User user = new User.Builder().username("username1")
-//                .uuid(ID.randomUUID())
-//                .email("email@email.com")
-//                .password("password")
-//                .role(User.Role.CLIENT)
-//                .build();
-////        userDao.add(user);
-////        User user1 = userDao.findByUsernameAndPassword("username", "password");
-////        System.out.println(user1);
-//        User user1 = userDao.findByUsername("user");
-//        System.out.println(user1);
-        Logger log = LoggerFactory.getLogger(Runner.class);
-        log.error("message");
+        Gallery gallery = new Gallery();
+        Painting painting = new Painting();
+        painting.setPath("ololo/alala/uploads/image.gif");
+        gallery.add(painting);
+        System.out.println(gallery.getLinks());
     }
 
     private static void listPrint(List list) {

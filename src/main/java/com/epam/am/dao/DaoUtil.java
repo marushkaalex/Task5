@@ -75,4 +75,14 @@ public class DaoUtil {
         close(statement);
         close(connection);
     }
+
+    public static void checkConnection(Connection connection) throws DaoException {
+        try {
+            if (connection == null || connection.isClosed()) {
+                throw new DaoException("no connection");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

@@ -36,7 +36,7 @@ public class Transliterator {
         letters.put("Щ", "SH");
         letters.put("Ъ", "'");
         letters.put("Ы", "Y");
-        letters.put("Ъ", "'");
+        letters.put("Ь", "'");
         letters.put("Э", "E");
         letters.put("Ю", "U");
         letters.put("Я", "YA");
@@ -69,7 +69,7 @@ public class Transliterator {
         letters.put("щ", "sh");
         letters.put("ъ", "'");
         letters.put("ы", "y");
-        letters.put("ъ", "'");
+        letters.put("ь", "'");
         letters.put("э", "e");
         letters.put("ю", "u");
         letters.put("я", "ya");

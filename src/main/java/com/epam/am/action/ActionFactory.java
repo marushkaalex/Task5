@@ -18,6 +18,8 @@ public class ActionFactory {
         ActionFactory.actions.put("GET/register", new ShowPageIfLoggedInAction("", true, "register", false));
         ActionFactory.actions.put("POST/register", new RegisterCheckAction());
         ActionFactory.actions.put("POST/upload", new ImageUploadAction());
+        ActionFactory.actions.put("GET/upload", new ShowPageAction("upload"));
+        ActionFactory.actions.put("GET/gallery", new ShowPageAction("gallery"));
 
     }
 

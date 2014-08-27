@@ -14,7 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static com.epam.am.database.DBHelper.USER.*;
+import static com.epam.am.database.DBHelper.UserTable.*;
 
 public class RegisterCheckAction implements Action {
 

@@ -1,11 +1,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Alexander
-  Date: 12.08.2014
-  Time: 11:27
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.language}"/>
 <fmt:setBundle basename="i18n"/>
@@ -20,12 +14,12 @@
         <fmt:message key="label.hello"/>
         , <a href="acc">${sessionScope.user.username}</a>
     </h2>
-    <a href="logout"><fmt:message key="label.logout"/></a>
+    <a href="logout"><fmt:message key="label.logout"/></a><br>
 
-    <form method="post" action="upload" enctype="multipart/form-data">
-        <input class="form-control" name="imageFile" type="file" accept="image/*">
-        <input type="submit">
-    </form>
+    <c:if test="${sessionScope.user.role == 'ARTIST'}">
+        <a href="upload">Upload image</a>
+    </c:if>
+
 </div>
 
 </body>

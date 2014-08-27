@@ -23,7 +23,7 @@
 <c:if test="${requestScope.error != null}">
     <fmt:message key="login.user_not_found"/>
 </c:if>
-
+<img src="uploads/210-rembrandt.gif"/>
 </body>
 
 </html>

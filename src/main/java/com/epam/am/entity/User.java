@@ -10,6 +10,9 @@ public class User {
     private Role role;
     private Date dob;
 
+    public User() {
+    }
+
     public User(long id, String username, String email, String password, Role role, Date dob) {
         this.id = id;
         this.username = username;
