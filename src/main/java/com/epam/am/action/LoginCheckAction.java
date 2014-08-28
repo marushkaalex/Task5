@@ -6,12 +6,15 @@ import com.epam.am.dao.H2DaoFactory;
 import com.epam.am.dao.UserDao;
 import com.epam.am.entity.User;
 import com.epam.am.util.HashCalculator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
+    private static final Logger LOG = LoggerFactory.getLogger(LoginCheckAction.class);
     private ActionResult home = new ActionResult("", true);
     private ActionResult login = new ActionResult("login");
 

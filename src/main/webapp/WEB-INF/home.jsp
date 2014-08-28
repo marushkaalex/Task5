@@ -16,6 +16,8 @@
     </h2>
     <a href="logout"><fmt:message key="label.logout"/></a><br>
 
+    <a href="liked">Liked</a><br>
+
     <c:if test="${sessionScope.user.role == 'ARTIST'}">
         <a href="upload">Upload image</a>
     </c:if>

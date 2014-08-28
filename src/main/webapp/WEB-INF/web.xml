@@ -34,7 +34,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ImageReturner</servlet-name>
-        <url-pattern>/img</url-pattern>
+        <url-pattern>/img/*</url-pattern>
     </servlet-mapping>
 
     <filter>

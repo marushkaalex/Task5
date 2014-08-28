@@ -18,14 +18,23 @@ public class DBHelper {
         public static final String TABLE = "painting";
         public static final String USER_PAINTING_TABLE = "user_painting";
         public static final String ID = "id";
-        public static final String USER_ID = "artist_id";
         public static final String LIKES = "likes";
         public static final String PATH = "path";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String DATE = "date";
+        public static final String ARTIST_ID = "artist_id";
 
         private PaintingTable() {
+        }
+    }
+
+    public class UserPaintingTable {
+        public static final String TABLE = "user_painting";
+        public static final String USER_ID = "user_id";
+        public static final String PAINTING_ID = "painting_id";
+
+        private UserPaintingTable() {
         }
     }
 }

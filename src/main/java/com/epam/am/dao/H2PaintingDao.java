@@ -1,5 +1,6 @@
 package com.epam.am.dao;
 
+import com.epam.am.database.DBHelper;
 import com.epam.am.entity.Painting;
 
 import java.sql.*;
@@ -12,18 +13,22 @@ import static com.epam.am.database.DBHelper.PaintingTable.*;
 
 public class H2PaintingDao implements PaintingDao {
 
-    private static final String ADD = "INSERT INTO " + TABLE + " (" + USER_ID + "," + LIKES + "," + PATH + ","
+    private static final String ADD = "INSERT INTO " + TABLE + " (" + ARTIST_ID + "," + LIKES + "," + PATH + ","
             + NAME + "," + DESCRIPTION + "," + DATE + ") VALUES (?,0,?,?,?,?)";
     private static final String FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE " + ID + "=?";
     private static final String FIND_BY_NAME = "SELECT * FROM " + TABLE + " WHERE " + NAME + "=?";
     private static final String REMOVE = "DELETE FROM " + TABLE + " WHERE " + ID + "=?";
-    private static final String UPDATE = "UPDATE " + TABLE + " SET " + USER_ID + "=?," + LIKES + "=?," + PATH + "=?,"
+    private static final String UPDATE = "UPDATE " + TABLE + " SET " + ARTIST_ID + "=?," + LIKES + "=?," + PATH + "=?,"
             + NAME + "=?," + DESCRIPTION + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
-    private static final String ARTISTS_PAINTINGS = "SELECT * FROM " + TABLE + " WHERE " + USER_ID + "=?";
+    private static final String ARTISTS_PAINTINGS = "SELECT * FROM " + TABLE + " WHERE " + ARTIST_ID + "=?";
     private static final String ADD_LIKE = "UPDATE " + TABLE + "SET LIKES=LIKES+1 WHERE " + ID + "=?";
     private static final String ADD_ARTIST_PAINTING = "INSERT INTO " + USER_PAINTING_TABLE + "VALUES (?,?)";
-    private static final String GET_USER_LIKES = ""; //TODO
+    //    private static final String GET_USER_LIKES = "select id,ARTIST_ID ,LIKES ,PATH ,NAME ,DESCRIPTION ,DATE  from painting join USER_PAINTING  on painting.id=USER_PAINTING.PAINTING_ID where USER_ID =210"; //TODO
+    private static final String GET_USER_LIKES = "SELECT " + ID + "," + ARTIST_ID + "," + LIKES + ","
+            + PATH + "," + NAME + "," + DESCRIPTION + "," + DATE + " FROM " + TABLE + " JOIN "
+            + DBHelper.UserPaintingTable.TABLE + " ON " + TABLE + "." + ID + "=" + DBHelper.UserPaintingTable.TABLE + "."
+            + DBHelper.UserPaintingTable.PAINTING_ID + " WHERE " + DBHelper.UserPaintingTable.USER_ID + "=?";
 
     private final Connection connection;
 
@@ -84,7 +89,7 @@ public class H2PaintingDao implements PaintingDao {
     private Painting createPainting(ResultSet resultSet) throws DaoException {
         try {
             long id = resultSet.getLong(ID);
-            long userId = resultSet.getLong(USER_ID);
+            long userId = resultSet.getLong(ARTIST_ID);
             int likes = resultSet.getInt(LIKES);
             String path = resultSet.getString(PATH);
             String name = resultSet.getString(NAME);
@@ -202,7 +207,7 @@ public class H2PaintingDao implements PaintingDao {
         List<Painting> result = new ArrayList<>();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = prepareStatement(connection, ARTISTS_PAINTINGS, false, userId);
+            preparedStatement = prepareStatement(connection, GET_USER_LIKES, false, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result.add(createPainting(resultSet));

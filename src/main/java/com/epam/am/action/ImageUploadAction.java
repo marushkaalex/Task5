@@ -6,6 +6,7 @@ import com.epam.am.dao.H2DaoFactory;
 import com.epam.am.dao.PaintingDao;
 import com.epam.am.entity.Painting;
 import com.epam.am.entity.User;
+import com.epam.am.util.PropertyManager;
 import com.epam.am.util.Transliterator;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -27,6 +28,8 @@ import static com.epam.am.database.DBHelper.PaintingTable.NAME;
 
 public class ImageUploadAction implements Action {
 
+    private final static String ENV = "environment.var";
+    private final static String PATH = "path";
     private static final Logger LOG = LoggerFactory.getLogger(ImageUploadAction.class);
     private static final int PICTURE_MAX_SIZE = 1024 * 1024;
     private static final ActionResult result = new ActionResult("home");
@@ -93,18 +96,21 @@ public class ImageUploadAction implements Action {
         if (mimeType == null || !mimeType.startsWith("image")) throw new ActionException("NOPE!");
 
         String fieldName = item.getFieldName();
-        User user = (User) req.getSession().getAttribute("user");
-        if (user == null) throw new ActionException("You must be logged in");
-        String fileName = (user.getId() + "-" + Transliterator.toTranslit(item.getName()));
         String contentType = item.getContentType();
         long sizeInBytes = item.getSize();
+
+        User user = (User) req.getSession().getAttribute("user");
+        if (user == null || user.getRole() == User.Role.CLIENT) throw new ActionException("You must be logged in");
+
+        String fileName = (user.getId() + "-" + Transliterator.toTranslit(item.getName()));
         LOG.debug("fieldName: {}", fieldName);
         LOG.debug("fileName: {}", fileName);
         LOG.debug("contentType: {}", contentType);
         LOG.debug("sizeInBytes: {}", sizeInBytes);
 
-        String root = req.getServletContext().getRealPath("/");
-        System.out.println(root);
+        PropertyManager manager = PropertyManager.getManager(PropertyManager.STORAGE);
+
+        String root = System.getenv(manager.getProperty(ENV)) + manager.getProperty(PATH);
         File path = new File(root + "/uploads");
         if (!path.exists()) {
             path.mkdirs();
@@ -116,7 +122,6 @@ public class ImageUploadAction implements Action {
 
         try {
             item.write(uploadedFile);
-
             LOG.debug("uploaded file has been written");
             painting.setPath(absolutePath);
             painting.setArtistId(((User) req.getSession().getAttribute("user")).getId());

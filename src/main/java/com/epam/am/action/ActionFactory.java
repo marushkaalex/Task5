@@ -20,6 +20,8 @@ public class ActionFactory {
         ActionFactory.actions.put("POST/upload", new ImageUploadAction());
         ActionFactory.actions.put("GET/upload", new ShowPageAction("upload"));
         ActionFactory.actions.put("GET/gallery", new ShowPageAction("gallery"));
+        ActionFactory.actions.put("GET/liked", new ShowGalleryAction());
+        ActionFactory.actions.put("POST/deletePainting", new DeletePaintingAction());
 
     }
 

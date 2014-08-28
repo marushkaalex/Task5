@@ -1,6 +1,9 @@
 package com.epam.am;
 
-import com.epam.am.entity.Gallery;
+import com.epam.am.dao.DaoException;
+import com.epam.am.dao.DaoFactory;
+import com.epam.am.dao.H2DaoFactory;
+import com.epam.am.dao.PaintingDao;
 import com.epam.am.entity.Painting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +26,16 @@ import java.util.List;
 public class Runner {
     private static Logger log = LoggerFactory.getLogger(Runner.class);
 
-    public static void main(String[] args) throws SQLException {
-        Gallery gallery = new Gallery();
-        Painting painting = new Painting();
-        painting.setPath("ololo/alala/uploads/image.gif");
-        gallery.add(painting);
-        System.out.println(gallery.getLinks());
+    public static void main(String[] args) throws SQLException, DaoException {
+//        Gallery gallery = new Gallery();
+//        Painting painting = new Painting();
+//        painting.setPath("ololo/alala/uploads/image.gif");
+//        gallery.add(painting);
+//        System.out.println(gallery.getLinks());
+        DaoFactory daoFactory = new H2DaoFactory();
+        PaintingDao paintingDao = daoFactory.getPaintingDao();
+        List<Painting> userLikes = paintingDao.getUserLikes(210);
+        System.out.println(userLikes);
     }
 
     private static void listPrint(List list) {
