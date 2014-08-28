@@ -6,6 +6,7 @@ import java.util.Properties;
 
 public class PropertyManager {
     public static final String DATABASE = "database.properties";
+    public static final String STORAGE = "storage.properties";
     private static Properties PROPERTIES = new Properties();
     private static PropertyManager manager = null;
     private static String file;

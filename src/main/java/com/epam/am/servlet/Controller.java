@@ -30,7 +30,8 @@ public class Controller extends javax.servlet.http.HttpServlet {
         try {
             result = action.execute(req);
         } catch (ActionException e) {
-            e.printStackTrace();
+            resp.sendError(505, e.getMessage());
+            return;
         }
 
         if (result.isRedirection()) {

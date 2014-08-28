@@ -20,6 +20,8 @@
         <a href="upload">Upload image</a>
     </c:if>
 
+    <br><img src="${pageContext.request.contextPath}/img/asdf"/>
+
 </div>
 
 </body>

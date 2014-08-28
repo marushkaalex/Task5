@@ -88,6 +88,10 @@ public class ImageUploadAction implements Action {
     }
 
     private void processUploadedFile(FileItem item, HttpServletRequest req) throws ActionException {
+
+        String mimeType = req.getServletContext().getMimeType(item.getName());
+        if (mimeType == null || !mimeType.startsWith("image")) throw new ActionException("NOPE!");
+
         String fieldName = item.getFieldName();
         User user = (User) req.getSession().getAttribute("user");
         if (user == null) throw new ActionException("You must be logged in");
@@ -112,6 +116,7 @@ public class ImageUploadAction implements Action {
 
         try {
             item.write(uploadedFile);
+
             LOG.debug("uploaded file has been written");
             painting.setPath(absolutePath);
             painting.setArtistId(((User) req.getSession().getAttribute("user")).getId());

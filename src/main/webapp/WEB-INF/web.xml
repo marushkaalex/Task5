@@ -28,6 +28,14 @@
         <servlet-name>ExceptionHandler</servlet-name>
         <url-pattern>/error</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ImageReturner</servlet-name>
+        <servlet-class>com.epam.am.servlet.ImageReturner</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImageReturner</servlet-name>
+        <url-pattern>/img</url-pattern>
+    </servlet-mapping>
 
     <filter>
         <filter-name>SecurityFilter</filter-name>
