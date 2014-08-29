@@ -1,9 +1,6 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.DaoException;
-import com.epam.am.dao.DaoFactory;
-import com.epam.am.dao.H2DaoFactory;
-import com.epam.am.dao.PaintingDao;
+import com.epam.am.dao.*;
 import com.epam.am.entity.Gallery;
 import com.epam.am.entity.Painting;
 import com.epam.am.entity.User;
@@ -20,7 +17,8 @@ public class ShowGalleryAction implements Action {
         }
         DaoFactory daoFactory = new H2DaoFactory();
         try {
-            PaintingDao paintingDao = daoFactory.getPaintingDao();
+            DaoManager daoManager = daoFactory.getDaoManager();
+            PaintingDao paintingDao = daoManager.getPaintingDao();
             List<Painting> userLikes = paintingDao.getArtistsPaintings(user.getId());
             Gallery gallery = new Gallery(userLikes);
             req.setAttribute("gallery", gallery);

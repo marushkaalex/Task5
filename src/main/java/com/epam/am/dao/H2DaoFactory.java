@@ -13,8 +13,6 @@ public class H2DaoFactory implements DaoFactory {
     private static final Logger LOG = LoggerFactory.getLogger(H2DaoFactory.class);
     private static final BoneCP pool;
     private static Connection connection;
-    private UserDao userDao;
-    private PaintingDao paintingDao;
 
     static {
         BoneCP tmp = null;
@@ -27,27 +25,7 @@ public class H2DaoFactory implements DaoFactory {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        if (connection == null) {
-            connection = pool.getConnection();
-        }
-        return connection;
-    }
-
-    @Override
-    public UserDao getUserDao() throws DaoException {
-        if (userDao == null) {
-            try {
-                userDao = new H2UserDao(getConnection());
-            } catch (SQLException e) {
-                throw new DaoException("Can not get connection for user dao", e);
-            }
-        }
-        return userDao;
-    }
-
-    @Override
-    public void open() throws DaoException {
+    public Connection getConnection() throws DaoException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = pool.getConnection();
@@ -55,28 +33,11 @@ public class H2DaoFactory implements DaoFactory {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        return connection;
     }
 
     @Override
-    public void close() throws DaoException {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public PaintingDao getPaintingDao() throws DaoException {
-        if (paintingDao == null) {
-            try {
-                paintingDao = new H2PaintingDao(getConnection());
-            } catch (SQLException e) {
-                throw new DaoException("Can not get connection for user dao", e);
-            }
-        }
-        return paintingDao;
+    public DaoManager getDaoManager() throws DaoException {
+        return new H2DaoManager(getConnection());
     }
 }

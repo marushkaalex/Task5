@@ -24,4 +24,6 @@ public interface PaintingDao {
     void addLike(long userId, long paintingId) throws DaoException;
 
     List<Painting> getArtistsPaintings(long artistId) throws DaoException;
+
+    void removeLikes(long paintingId) throws DaoException;
 }

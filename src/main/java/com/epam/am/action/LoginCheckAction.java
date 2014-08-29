@@ -29,7 +29,7 @@ public class LoginCheckAction implements Action {
         UserDao userDao;
         User user = null;
         try {
-            userDao = daoFactory.getUserDao();
+            userDao = daoFactory.getDaoManager().getUserDao();
             user = userDao.findByUsernameAndPassword(username, password);
         } catch (DaoException e) {
             throw new ActionException("Exception while finding user", e);

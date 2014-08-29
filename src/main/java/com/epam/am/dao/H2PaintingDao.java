@@ -18,6 +18,8 @@ public class H2PaintingDao implements PaintingDao {
     private static final String FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE " + ID + "=?";
     private static final String FIND_BY_NAME = "SELECT * FROM " + TABLE + " WHERE " + NAME + "=?";
     private static final String REMOVE = "DELETE FROM " + TABLE + " WHERE " + ID + "=?";
+    private static final String REMOVE_LIKES = "DELETE FROM " + DBHelper.UserPaintingTable.TABLE
+            + " WHERE " + DBHelper.UserPaintingTable.PAINTING_ID + "=?";
     private static final String UPDATE = "UPDATE " + TABLE + " SET " + ARTIST_ID + "=?," + LIKES + "=?," + PATH + "=?,"
             + NAME + "=?," + DESCRIPTION + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
@@ -238,4 +240,20 @@ public class H2PaintingDao implements PaintingDao {
         }
         return result;
     }
+
+    @Override
+    public void removeLikes(long paintingId) throws DaoException {
+        checkConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, REMOVE_LIKES, false, paintingId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
+    }
+
+
 }

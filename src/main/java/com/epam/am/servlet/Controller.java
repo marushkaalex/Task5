@@ -38,7 +38,7 @@ public class Controller extends javax.servlet.http.HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/" + result.getView());
             return;
         }
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/WEB-INF/" + result.getView() + ".jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/WEB-INF/jsp/" + result.getView() + ".jsp");
         requestDispatcher.forward(req, resp);
     }
 }

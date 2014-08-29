@@ -1,13 +1,9 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.DaoException;
-import com.epam.am.dao.DaoFactory;
-import com.epam.am.dao.H2DaoFactory;
-import com.epam.am.dao.PaintingDao;
+import com.epam.am.dao.*;
 import com.epam.am.entity.Painting;
 import com.epam.am.entity.User;
 import com.epam.am.util.PropertyManager;
-import com.epam.am.util.Transliterator;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -20,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +62,8 @@ public class ImageUploadAction implements Action {
                     }
                 }
                 DaoFactory daoFactory = new H2DaoFactory();
-                PaintingDao paintingDao = daoFactory.getPaintingDao();
+                DaoManager daoManager = daoFactory.getDaoManager();
+                PaintingDao paintingDao = daoManager.getPaintingDao();
                 paintingDao.add(painting);
             } catch (FileUploadException | DaoException e) {
                 req.setAttribute("error", "file loading error");
@@ -102,7 +100,11 @@ public class ImageUploadAction implements Action {
         User user = (User) req.getSession().getAttribute("user");
         if (user == null || user.getRole() == User.Role.CLIENT) throw new ActionException("You must be logged in");
 
-        String fileName = (user.getId() + "-" + Transliterator.toTranslit(item.getName()));
+        String itemName = item.getName();
+        int dot = itemName.lastIndexOf(".");
+        String extenstion = dot >= 0 ? itemName.substring(dot) : "jpg";
+        String date = new SimpleDateFormat("yyyy-MM-dd-k-m-s").format(new Date());
+        String fileName = (user.getId() + "-" + date + extenstion);
         LOG.debug("fieldName: {}", fieldName);
         LOG.debug("fileName: {}", fileName);
         LOG.debug("contentType: {}", contentType);

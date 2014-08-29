@@ -1,17 +1,14 @@
 package com.epam.am.dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public interface DaoFactory {
 
-    public Connection getConnection() throws SQLException;
+    public Connection getConnection() throws DaoException;
 
-    public UserDao getUserDao() throws DaoException;
+    public DaoManager getDaoManager() throws DaoException;
 
-    public PaintingDao getPaintingDao() throws DaoException;
-
-    void open() throws DaoException;
-
-    void close() throws DaoException;
+//    void open() throws DaoException;
+//
+//    void close() throws DaoException;
 }

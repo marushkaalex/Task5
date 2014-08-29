@@ -1,11 +1,11 @@
 package com.epam.am.entity;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Gallery {
-    private Map<Painting, String> links = new HashMap<>();
+    private Map<Painting, String> links = new LinkedHashMap<>();
 
     public Gallery() {
     }
