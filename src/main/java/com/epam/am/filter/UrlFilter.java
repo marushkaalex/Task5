@@ -19,7 +19,7 @@ public class UrlFilter implements Filter {
     private void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws ServletException, IOException {
         String pathInfo = req.getRequestURI().substring(req.getContextPath().length());
         System.out.println(pathInfo);
-        if (pathInfo.startsWith("/static") || pathInfo.startsWith("/webjars") || pathInfo.startsWith("/uploads") || pathInfo.startsWith("/img")) {
+        if (pathInfo.startsWith("/static") || pathInfo.contains("/webjars") || pathInfo.startsWith("/uploads") || pathInfo.startsWith("/img")) {
             chain.doFilter(req, resp);
             return;
         }

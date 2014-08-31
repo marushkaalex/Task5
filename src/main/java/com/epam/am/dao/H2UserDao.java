@@ -1,6 +1,7 @@
 package com.epam.am.dao;
 
 import com.epam.am.database.DBHelper;
+import com.epam.am.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class H2UserDao implements UserDao {
     private static final String UPDATE = "UPDATE " + TABLE + " SET " + USERNAME + "=?, "
             + EMAIL + "=?, " + PASSWORD + "=?, " + ROLE + "=?," + DATE_OF_BIRTH + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
+    private static final String GET_BY_ROLE = "SELECT * FROM " + TABLE + " WHERE " + ROLE + "=?";
     private static final String IS_DUPLICATE = "SELECT " + USERNAME + ", " + EMAIL + " FROM " + TABLE + " WHERE " +
             ID + "=? OR " + USERNAME + "=? OR " + EMAIL + "=?";
 
@@ -282,5 +284,24 @@ public class H2UserDao implements UserDao {
         } finally {
             close(preparedStatement);
         }
+    }
+
+    @Override
+    public List<User> getByRole(User.Role role) throws DaoException {
+        checkConnection();
+        List<User> result = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, GET_BY_ROLE, false, role.ordinal());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(createUser(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
+        return result;
     }
 }

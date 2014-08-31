@@ -1,16 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="m" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.language}"/>
 <fmt:setBundle basename="i18n"/>
 <html>
-<%--<link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/css/style.css">--%>
-<link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.css"/>
+<link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.2.0/css/bootstrap.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/static/style/css/style.css"/>"/>
 <head>
     <title>Registration</title>
 </head>
 <body>
-<nav class="navbar navbar-default" role="navigation">
+<div id="wrapper">
+    <m:sidebar user="${user}"/>
+    <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -77,6 +80,7 @@
         </c:if>
 
     </div>
+</div>
 </div>
 </body>
 </html>

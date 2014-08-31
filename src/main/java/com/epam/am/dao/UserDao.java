@@ -33,4 +33,6 @@ public interface UserDao {
     List<String> isDuplicate(User user) throws DaoException;
 
     List<User> getUserList() throws DaoException;
+
+    List<User> getByRole(User.Role role) throws DaoException;
 }

@@ -51,3 +51,9 @@ CREATE TABLE user_painting (
   painting_id INT,
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (painting_id) REFERENCES painting (id));
+
+CREATE TABLE avatar (
+  user_id     INT,
+  avatar_path VARCHAR(255),
+  FOREIGN KEY (user_id) REFERENCES user (id),
+  PRIMARY KEY (user_id));

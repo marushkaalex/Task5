@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -29,14 +30,13 @@ public class ImageUploadAction implements Action {
     private final static String PATH = "path";
     private static final Logger LOG = LoggerFactory.getLogger(ImageUploadAction.class);
     private static final int PICTURE_MAX_SIZE = 1024 * 1024;
-    private static final ActionResult result = new ActionResult("home");
+    private static final ActionResult result = new ActionResult("gallery", true);
 
     private Painting painting = new Painting();
 
     @Override
     public ActionResult execute(HttpServletRequest req) throws ActionException {
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
-
         if (isMultipart) {
             ServletContext servletContext = req.getServletContext();
 
@@ -77,7 +77,11 @@ public class ImageUploadAction implements Action {
 
     private void processFormField(FileItem item) {
         String name = item.getFieldName();
-        String value = item.getString();
+        String value = null;
+        try {
+            value = new String(item.getString().getBytes("iso-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
         switch (name) {
             case NAME:
                 painting.setName(value);

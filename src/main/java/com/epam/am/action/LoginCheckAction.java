@@ -15,7 +15,7 @@ public class LoginCheckAction implements Action {
     private final static String USERNAME = "username";
     private final static String PASSWORD = "password";
     private static final Logger LOG = LoggerFactory.getLogger(LoginCheckAction.class);
-    private ActionResult home = new ActionResult("", true);
+    //    private ActionResult home = new ActionResult("", true);
     private ActionResult login = new ActionResult("login");
 
     @Override
@@ -41,10 +41,6 @@ public class LoginCheckAction implements Action {
 
         req.getSession().setAttribute("user", user);
         req.getSession().setAttribute("lang", "en");
-        return home;
-    }
-
-    private boolean isLengthInRange(String string) {
-        return (string.length() > 3 && string.length() < 21);
+        return new ActionResult("user/" + user.getUsername(), true);
     }
 }

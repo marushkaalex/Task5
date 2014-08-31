@@ -18,10 +18,11 @@ public class ActionFactory {
         ActionFactory.actions.put("GET/register", new ShowPageIfLoggedInAction("", true, "register", false));
         ActionFactory.actions.put("POST/register", new RegisterCheckAction());
         ActionFactory.actions.put("POST/upload", new ImageUploadAction());
-        ActionFactory.actions.put("GET/upload", new ShowPageAction("upload"));
-        ActionFactory.actions.put("GET/gallery", new ShowPageAction("gallery"));
-        ActionFactory.actions.put("GET/liked", new ShowGalleryAction());
+        ActionFactory.actions.put("GET/upload", new ShowPageIfLoggedInAction("upload", false, "login", true));
+        ActionFactory.actions.put("GET/gallery", new ShowGalleryAction());
         ActionFactory.actions.put("POST/deletePainting", new DeletePaintingAction());
+        ActionFactory.actions.put("GET/artists", new ShowArtistsAction());
+        ActionFactory.actions.put("GET/user", new ShowUserAction());
 
     }
 
