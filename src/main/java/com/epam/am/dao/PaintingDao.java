@@ -19,11 +19,15 @@ public interface PaintingDao {
 
     List<Painting> getPaintingList() throws DaoException;
 
+    List<Painting> getPaintingList(int count) throws DaoException;
+
     List<Painting> getUserLikes(long userId) throws DaoException;
 
     void addLike(long userId, long paintingId) throws DaoException;
 
     List<Painting> getArtistsPaintings(long artistId) throws DaoException;
+
+    List<Painting> getTop(int count) throws DaoException;
 
     void removeLikes(long paintingId) throws DaoException;
 }

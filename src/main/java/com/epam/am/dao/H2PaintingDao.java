@@ -23,6 +23,8 @@ public class H2PaintingDao implements PaintingDao {
     private static final String UPDATE = "UPDATE " + TABLE + " SET " + ARTIST_ID + "=?," + LIKES + "=?," + PATH + "=?,"
             + NAME + "=?," + DESCRIPTION + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
+    private static final String GET_TOP_ALL = "SELECT TOP ? * FROM " + TABLE;
+    private static final String GET_TOP_BY_LIKES = "SELECT TOP ? * FROM " + TABLE + " ORDER BY " + LIKES;
     private static final String ARTISTS_PAINTINGS = "SELECT * FROM " + TABLE + " WHERE " + ARTIST_ID + "=?";
     private static final String ADD_LIKE = "UPDATE " + TABLE + "SET LIKES=LIKES+1 WHERE " + ID + "=?";
     private static final String ADD_ARTIST_PAINTING = "INSERT INTO " + USER_PAINTING_TABLE + "VALUES (?,?)";
@@ -255,5 +257,41 @@ public class H2PaintingDao implements PaintingDao {
         }
     }
 
+    @Override
+    public List<Painting> getPaintingList(int count) throws DaoException {
+        checkConnection();
+        List<Painting> result = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, GET_TOP_ALL, false, count);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(createPainting(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
+        return result;
+    }
 
+    @Override
+    public List<Painting> getTop(int count) throws DaoException {
+        checkConnection();
+        List<Painting> result = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, GET_TOP_BY_LIKES, false, count);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(createPainting(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
+        return result;
+    }
 }

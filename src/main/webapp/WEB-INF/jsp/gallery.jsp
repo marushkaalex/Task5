@@ -12,8 +12,9 @@
     <m:sidebar user="${user}"/>
     <div class="container">
         <a href="<c:url value="/home"/>">home</a><br>
+        <c:if test="${upload == true}">
         <a href="<c:url value="/upload"/>">Upload image</a>
-
+        </c:if>
         <form action="${pageContext.request.contextPath}/deletePainting" method="post">
             <c:forEach var="painting" items="${gallery.links}">
                 <h3>${painting.key.name}</h3><br>

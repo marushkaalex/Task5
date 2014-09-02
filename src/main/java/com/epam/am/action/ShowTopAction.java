@@ -6,25 +6,31 @@ import com.epam.am.entity.Painting;
 import com.epam.am.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ShowGalleryAction implements Action {
+public class ShowTopAction implements Action {
+    private static final int MAX_PAINTINGS = 50;
+    private ActionResult result = new ActionResult("top");
+
     @Override
     public ActionResult execute(HttpServletRequest req) throws ActionException {
-        User user = (User) req.getSession().getAttribute("user");
-        if (user == null) {
-            return new ActionResult("login", true);
-        }
         DaoFactory daoFactory = new H2DaoFactory();
         DaoManager daoManager = null;
         try {
             daoManager = daoFactory.getDaoManager();
             PaintingDao paintingDao = daoManager.getPaintingDao();
-            List<Painting> artistsPaintings = paintingDao.getArtistsPaintings(user.getId());
+            UserDao userDao = daoManager.getUserDao();
+            List<Painting> artistsPaintings = paintingDao.getPaintingList(MAX_PAINTINGS);
             Gallery gallery = new Gallery(artistsPaintings);
-            req.setAttribute("gallery", gallery);
-            req.setAttribute("upload", true);
-            return new ActionResult("gallery");
+            Map<Map.Entry<Painting, String>, User> signedPaintings = new LinkedHashMap<>();
+            for (Map.Entry<Painting, String> paintingStringEntry : gallery.getLinks().entrySet()) {
+                signedPaintings.put(paintingStringEntry,
+                        userDao.find(paintingStringEntry.getKey().getId()));
+            }
+            req.setAttribute("signedPaintings", signedPaintings);
+            return result;
         } catch (DaoException e) {
             throw new ActionException(e);
         } finally {

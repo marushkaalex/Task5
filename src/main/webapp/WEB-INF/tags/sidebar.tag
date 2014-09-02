@@ -9,6 +9,9 @@
         <li>
             <a href="<c:url value="/artists"/>">Artists</a>
         </li>
+        <li>
+            <a href="<c:url value="/top"/>">TOP</a>
+        </li>
         <c:if test="${not empty user}">
             <li>
                 <a href="<c:url value="/acc"/>">${user.username}</a>

@@ -8,7 +8,7 @@ import com.epam.am.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public class ShowGalleryAction implements Action {
+public class ShowLikedAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest req) throws ActionException {
         User user = (User) req.getSession().getAttribute("user");
@@ -16,25 +16,15 @@ public class ShowGalleryAction implements Action {
             return new ActionResult("login", true);
         }
         DaoFactory daoFactory = new H2DaoFactory();
-        DaoManager daoManager = null;
         try {
-            daoManager = daoFactory.getDaoManager();
+            DaoManager daoManager = daoFactory.getDaoManager();
             PaintingDao paintingDao = daoManager.getPaintingDao();
-            List<Painting> artistsPaintings = paintingDao.getArtistsPaintings(user.getId());
-            Gallery gallery = new Gallery(artistsPaintings);
+            List<Painting> userLiked = paintingDao.getUserLikes(user.getId());
+            Gallery gallery = new Gallery(userLiked);
             req.setAttribute("gallery", gallery);
-            req.setAttribute("upload", true);
             return new ActionResult("gallery");
         } catch (DaoException e) {
             throw new ActionException(e);
-        } finally {
-            if (daoManager != null) {
-                try {
-                    daoManager.close();
-                } catch (DaoException e) {
-                    throw new ActionException(e);
-                }
-            }
         }
     }
 }

@@ -6,7 +6,7 @@
             <h3>${painting.key.name}</h3><br>
             <button name="painting" value="${painting.key}" type="submit">
                 <img class="img-thumbnail" style="height: 170px; width: auto; max-width: 500px"
-                     src="../<c:out value="${painting.value}"/>"/>
+                     src="<c:url value="/${painting.value}"/>"/>
             </button>
         </div>
     </c:forEach>

@@ -15,10 +15,9 @@
 <div id="wrapper">
     <m:sidebar user="${user}"/>
     <div class="container">
-        <c:if test="${requestScope.getLocale != null}">not null</c:if>
-        <div style="font-size: 10em; text-align: center">
-            <fmt:message key="label.hello"/>. Please <a href="${pageContext.request.contextPath}/login">log in</a> <br>
-            or <a href="${pageContext.request.contextPath}/register">register.</a>
+        Recently added
+        <div class="row">
+            <m:show_gallery paintings="${recentlyAdded}"/>
         </div>
     </div>
 </div>
