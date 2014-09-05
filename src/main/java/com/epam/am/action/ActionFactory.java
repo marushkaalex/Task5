@@ -25,6 +25,8 @@ public class ActionFactory {
         ActionFactory.actions.put("GET/artists", new ShowArtistsAction());
         ActionFactory.actions.put("GET/user", new ShowUserAction());
         ActionFactory.actions.put("GET/top", new ShowTopAction());
+        ActionFactory.actions.put("GET/painting", new ShowPaintingAction());
+        ActionFactory.actions.put("POST/like", new LikeAction());
 
     }
 

@@ -15,9 +15,7 @@ public class ShowIndexAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest req) throws ActionException {
         DaoFactory daoFactory = new H2DaoFactory();
-        DaoManager daoManager = null;
-        try {
-            daoManager = daoFactory.getDaoManager();
+        try (DaoManager daoManager = daoFactory.getDaoManager()) {
             PaintingDao paintingDao = daoManager.getPaintingDao();
             List<Painting> artistsPaintings = paintingDao.getPaintingList(MAX_PAINTINGS);
             Gallery gallery = new Gallery(artistsPaintings);
@@ -25,14 +23,6 @@ public class ShowIndexAction implements Action {
             return result;
         } catch (DaoException e) {
             throw new ActionException(e);
-        } finally {
-            if (daoManager != null) {
-                try {
-                    daoManager.close();
-                } catch (DaoException e) {
-                    throw new ActionException(e);
-                }
-            }
         }
     }
 }

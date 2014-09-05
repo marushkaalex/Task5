@@ -11,10 +11,6 @@ CREATE TABLE lang (
   locale   VARCHAR(5),
   language VARCHAR(50));
 
-INSERT INTO role VALUES (0, 'ADMIN');
-INSERT INTO role VALUES (1, 'ARTIST');
-INSERT INTO role VALUES (2, 'CLIENT');
-
 CREATE TABLE user (
   id       INT AUTO_INCREMENT,
   username VARCHAR(255),
@@ -38,7 +34,6 @@ CREATE TABLE LOG.LOGS (
 CREATE TABLE painting (
   id          INT AUTO_INCREMENT,
   artist_id   INT,
-  likes       INT,
   path        VARCHAR(255),
   name        VARCHAR(255),
   description VARCHAR(1000),

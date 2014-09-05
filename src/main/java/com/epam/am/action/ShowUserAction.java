@@ -13,8 +13,7 @@ public class ShowUserAction implements Action {
         String path = req.getPathInfo();
         String username = path.substring("/user/".length());
         System.out.println("SUA path: " + path);
-        try {
-            DaoManager daoManager = daoFactory.getDaoManager();
+        try (DaoManager daoManager = daoFactory.getDaoManager()) {
             UserDao userDao = daoManager.getUserDao();
             User user = userDao.findByUsername(username);
             if (user == null) {

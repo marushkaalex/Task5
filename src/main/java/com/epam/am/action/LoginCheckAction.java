@@ -1,9 +1,6 @@
 package com.epam.am.action;
 
-import com.epam.am.dao.DaoException;
-import com.epam.am.dao.DaoFactory;
-import com.epam.am.dao.H2DaoFactory;
-import com.epam.am.dao.UserDao;
+import com.epam.am.dao.*;
 import com.epam.am.entity.User;
 import com.epam.am.util.HashCalculator;
 import org.slf4j.Logger;
@@ -26,10 +23,9 @@ public class LoginCheckAction implements Action {
         password = HashCalculator.hash(password);
 
         DaoFactory daoFactory = new H2DaoFactory();
-        UserDao userDao;
         User user = null;
-        try {
-            userDao = daoFactory.getDaoManager().getUserDao();
+        try (DaoManager daoManager = daoFactory.getDaoManager()) {
+            UserDao userDao = daoManager.getUserDao();
             user = userDao.findByUsernameAndPassword(username, password);
         } catch (DaoException e) {
             throw new ActionException("Exception while finding user", e);
@@ -38,7 +34,6 @@ public class LoginCheckAction implements Action {
             req.setAttribute("error", "wrong username or password"); //TODO with resource bundle
             return login;
         }
-
         req.getSession().setAttribute("user", user);
         req.getSession().setAttribute("lang", "en");
         return new ActionResult("user/" + user.getUsername(), true);

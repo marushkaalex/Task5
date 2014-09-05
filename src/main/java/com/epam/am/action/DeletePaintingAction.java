@@ -21,18 +21,20 @@ public class DeletePaintingAction implements Action {
         DaoManager daoManager = null;
         try {
             daoManager = daoFactory.getDaoManager();
+        } catch (DaoException e) {
+            throw new ActionException(e);
+        }
+        try {
             daoManager.openTransaction();
             PaintingDao paintingDao = daoManager.getPaintingDao();
             paintingDao.removeLikes(id);
             paintingDao.removeByID(id);
             daoManager.commit();
         } catch (DaoException e) {
-            if (daoManager != null) {
-                try {
-                    daoManager.rollBack();
-                } catch (DaoException e1) {
-                    throw new ActionException(e1);
-                }
+            try {
+                daoManager.rollBack();
+            } catch (DaoException e1) {
+                throw new ActionException(e1);
             }
             throw new ActionException(e);
         } finally {

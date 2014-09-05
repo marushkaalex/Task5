@@ -44,15 +44,14 @@ public class ImageUploadAction implements Action {
                     FileCleanerCleanup.getFileCleaningTracker(servletContext);
 
             DiskFileItemFactory factory = new DiskFileItemFactory();
-//            File repository = (File) req.getServletContext().getAttribute("javax.servlet.context.tempdir");
             factory.setSizeThreshold(PICTURE_MAX_SIZE);
-//            factory.setRepository(repository);
             factory.setFileCleaningTracker(fileCleaningTracker);
 
             ServletFileUpload upload = new ServletFileUpload(factory);
             upload.setSizeMax(PICTURE_MAX_SIZE);
 
-            try {
+            DaoFactory daoFactory = new H2DaoFactory();
+            try (DaoManager daoManager = daoFactory.getDaoManager()) {
                 List<FileItem> items = upload.parseRequest(req);
                 for (FileItem item : items) {
                     if (item.isFormField()) {
@@ -61,8 +60,6 @@ public class ImageUploadAction implements Action {
                         processUploadedFile(item, req);
                     }
                 }
-                DaoFactory daoFactory = new H2DaoFactory();
-                DaoManager daoManager = daoFactory.getDaoManager();
                 PaintingDao paintingDao = daoManager.getPaintingDao();
                 paintingDao.add(painting);
             } catch (FileUploadException | DaoException e) {

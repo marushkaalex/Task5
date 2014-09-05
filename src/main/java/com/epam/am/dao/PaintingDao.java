@@ -30,4 +30,10 @@ public interface PaintingDao {
     List<Painting> getTop(int count) throws DaoException;
 
     void removeLikes(long paintingId) throws DaoException;
+
+    void removeLike(long userId, long paintingId) throws DaoException;
+
+    boolean isLiked(long userId, long paintingId) throws DaoException;
+
+    int getLikes(long paintingId) throws DaoException;
 }

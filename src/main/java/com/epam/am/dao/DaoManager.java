@@ -2,7 +2,7 @@ package com.epam.am.dao;
 
 import java.sql.Connection;
 
-public interface DaoManager {
+public interface DaoManager extends AutoCloseable {
 
     PaintingDao getPaintingDao();
 

@@ -5,6 +5,7 @@ import com.epam.am.entity.Painting;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -13,23 +14,32 @@ import static com.epam.am.database.DBHelper.PaintingTable.*;
 
 public class H2PaintingDao implements PaintingDao {
 
-    private static final String ADD = "INSERT INTO " + TABLE + " (" + ARTIST_ID + "," + LIKES + "," + PATH + ","
-            + NAME + "," + DESCRIPTION + "," + DATE + ") VALUES (?,0,?,?,?,?)";
+    private static final String ADD = "INSERT INTO " + TABLE + " (" + ARTIST_ID + "," + PATH + ","
+            + NAME + "," + DESCRIPTION + "," + DATE + ") VALUES (?,?,?,?,?)";
     private static final String FIND_BY_ID = "SELECT * FROM " + TABLE + " WHERE " + ID + "=?";
     private static final String FIND_BY_NAME = "SELECT * FROM " + TABLE + " WHERE " + NAME + "=?";
     private static final String REMOVE = "DELETE FROM " + TABLE + " WHERE " + ID + "=?";
+    private static final String REMOVE_LIKE = "DELETE FROM " + DBHelper.UserPaintingTable.TABLE + " WHERE "
+            + DBHelper.UserPaintingTable.USER_ID + "=? AND " + DBHelper.UserPaintingTable.PAINTING_ID + "=?";
     private static final String REMOVE_LIKES = "DELETE FROM " + DBHelper.UserPaintingTable.TABLE
             + " WHERE " + DBHelper.UserPaintingTable.PAINTING_ID + "=?";
-    private static final String UPDATE = "UPDATE " + TABLE + " SET " + ARTIST_ID + "=?," + LIKES + "=?," + PATH + "=?,"
+    private static final String UPDATE = "UPDATE " + TABLE + " SET " + ARTIST_ID + "=?," + PATH + "=?,"
             + NAME + "=?," + DESCRIPTION + "=? WHERE " + ID + "=?";
     private static final String GET_ALL = "SELECT * FROM " + TABLE;
-    private static final String GET_TOP_ALL = "SELECT TOP ? * FROM " + TABLE;
-    private static final String GET_TOP_BY_LIKES = "SELECT TOP ? * FROM " + TABLE + " ORDER BY " + LIKES;
+    private static final String GET_TOP_ALL = "SELECT TOP ? " + TABLE + ".*, COUNT("
+            + DBHelper.UserPaintingTable.PAINTING_ID + ") AS likes FROM " + TABLE + " LEFT JOIN "
+            + DBHelper.UserPaintingTable.TABLE + " ON " + TABLE + "." + ID + "="
+            + DBHelper.UserPaintingTable.TABLE + "." + DBHelper.UserPaintingTable.PAINTING_ID
+            + " GROUP BY " + TABLE + "." + ID + " ORDER BY likes";
+    private static final String GET_TOP_BY_LIKES = "SELECT TOP ? * FROM " + TABLE;
     private static final String ARTISTS_PAINTINGS = "SELECT * FROM " + TABLE + " WHERE " + ARTIST_ID + "=?";
-    private static final String ADD_LIKE = "UPDATE " + TABLE + "SET LIKES=LIKES+1 WHERE " + ID + "=?";
-    private static final String ADD_ARTIST_PAINTING = "INSERT INTO " + USER_PAINTING_TABLE + "VALUES (?,?)";
+    private static final String GET_LIKES = "SELECT COUNT(1) FROM " + DBHelper.UserPaintingTable.TABLE
+            + " WHERE " + DBHelper.UserPaintingTable.PAINTING_ID + "=?";
+    private static final String IS_LIKED = "SELECT COUNT(1) FROM " + DBHelper.UserPaintingTable.TABLE + " WHERE "
+            + DBHelper.UserPaintingTable.USER_ID + "=? AND " + DBHelper.UserPaintingTable.PAINTING_ID + "=?";
+    private static final String ADD_USER_PAINTING = "INSERT INTO " + USER_PAINTING_TABLE + " VALUES (?,?)";
     //    private static final String GET_USER_LIKES = "select id,ARTIST_ID ,LIKES ,PATH ,NAME ,DESCRIPTION ,DATE  from painting join USER_PAINTING  on painting.id=USER_PAINTING.PAINTING_ID where USER_ID =210"; //TODO
-    private static final String GET_USER_LIKES = "SELECT " + ID + "," + ARTIST_ID + "," + LIKES + ","
+    private static final String GET_USER_LIKES = "SELECT " + ID + "," + ARTIST_ID + ","
             + PATH + "," + NAME + "," + DESCRIPTION + "," + DATE + " FROM " + TABLE + " JOIN "
             + DBHelper.UserPaintingTable.TABLE + " ON " + TABLE + "." + ID + "=" + DBHelper.UserPaintingTable.TABLE + "."
             + DBHelper.UserPaintingTable.PAINTING_ID + " WHERE " + DBHelper.UserPaintingTable.USER_ID + "=?";
@@ -94,7 +104,7 @@ public class H2PaintingDao implements PaintingDao {
         try {
             long id = resultSet.getLong(ID);
             long userId = resultSet.getLong(ARTIST_ID);
-            int likes = resultSet.getInt(LIKES);
+            int likes = getLikes(id);
             String path = resultSet.getString(PATH);
             String name = resultSet.getString(NAME);
             String description = resultSet.getString(DESCRIPTION);
@@ -158,7 +168,6 @@ public class H2PaintingDao implements PaintingDao {
         try {
             preparedStatement = prepareStatement(connection, UPDATE, false,
                     painting.getArtistId(),
-                    painting.getLikes(),
                     painting.getPath(),
                     painting.getName(),
                     painting.getDescription(),
@@ -189,18 +198,13 @@ public class H2PaintingDao implements PaintingDao {
     @Override
     public void addLike(long userId, long paintingId) throws DaoException {
         checkConnection();
-        PreparedStatement addLike = null;
         PreparedStatement addUserPainting = null;
         try {
-            connection.setAutoCommit(false);
-            addLike = prepareStatement(connection, ADD_LIKE, false, paintingId);
-            addLike.execute();
-            addUserPainting = prepareStatement(connection, ADD_ARTIST_PAINTING, false, userId, paintingId);
+            addUserPainting = prepareStatement(connection, ADD_USER_PAINTING, false, userId, paintingId);
             addUserPainting.execute();
         } catch (SQLException e) {
             throw new DaoException(e);
         } finally {
-            close(addLike);
             close(addUserPainting);
         }
     }
@@ -287,11 +291,66 @@ public class H2PaintingDao implements PaintingDao {
             while (resultSet.next()) {
                 result.add(createPainting(resultSet));
             }
+            Collections.sort(result, (Painting p1, Painting p2) -> {
+                return p1.getLikes() == p2.getLikes() ? 0 : p1.getLikes() > p2.getLikes() ? -1 : 1;
+            });
         } catch (SQLException e) {
             throw new DaoException(e);
         } finally {
             close(preparedStatement);
         }
         return result;
+    }
+
+    @Override
+    public boolean isLiked(long userId, long paintingId) throws DaoException {
+        checkConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, IS_LIKED, false, userId, paintingId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1) == 1;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
+    }
+
+    @Override
+    public void removeLike(long userId, long paintingId) throws DaoException {
+        checkConnection();
+        PreparedStatement remove = null;
+        try {
+            connection.setAutoCommit(false);
+            remove = prepareStatement(connection, REMOVE_LIKE, false, userId, paintingId);
+            remove.execute();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(remove);
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new DaoException(e);
+            }
+        }
+    }
+
+    @Override
+    public int getLikes(long paintingId) throws DaoException {
+        checkConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = prepareStatement(connection, GET_LIKES, false, paintingId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+        }
     }
 }

@@ -16,8 +16,7 @@ public class ShowLikedAction implements Action {
             return new ActionResult("login", true);
         }
         DaoFactory daoFactory = new H2DaoFactory();
-        try {
-            DaoManager daoManager = daoFactory.getDaoManager();
+        try (DaoManager daoManager = daoFactory.getDaoManager()) {
             PaintingDao paintingDao = daoManager.getPaintingDao();
             List<Painting> userLiked = paintingDao.getUserLikes(user.getId());
             Gallery gallery = new Gallery(userLiked);

@@ -16,12 +16,12 @@
 <div id="wrapper">
     <m:sidebar user="${user}"/>
     <div class="container">
-        <form action="${pageContext.request.contextPath}/painting" method="post">
+        <form action="${pageContext.request.contextPath}/painting" method="get">
             <c:forEach items="${signedPaintings}" var="signed">
                 <div class="col-md-4">
                     <h3>${signed.key.key.name}</h3><br>
                     <a href="<c:url value="/user/${signed.value.id}"/>"><h5>${signed.value.username}</h5></a><br>
-                    <button name="painting" value="${signed.key.key.id}" type="submit">
+                    <button name="p" value="${signed.key.key.id}" type="submit">
                         <img class="img-thumbnail" style="height: 170px; width: auto; max-width: 500px"
                              src="<c:url value="/${signed.key.value}"/>"/>
                     </button>

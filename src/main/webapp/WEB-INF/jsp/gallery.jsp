@@ -20,7 +20,7 @@
                 <h3>${painting.key.name}</h3><br>
                 <img class="img-thumbnail" style="height: 170px; width: auto; max-width: 500px"
                      src="<c:out value="${painting.value}"/>"/>
-                <a href="deletePainting"><input name="id" value="${painting.key.id}" type="hidden">
+                <a href="<c:url value="/deletePainting"/>"><input name="id" value="${painting.key.id}" type="hidden">
                     <button value="${painting.key.path}" type="submit" name="path">Delete</button>
                 </a><br>
                 <h5>${painting.key.description}</h5>
